@@ -41,7 +41,7 @@
 require_once('include/MVC/Controller/SugarController.php');
 class CampaignsController extends SugarController{
 
-    function action_newsletterlist(){
+    function Applicationnewsletterlist() {
         $this->view = 'newsletterlist';
     }
 

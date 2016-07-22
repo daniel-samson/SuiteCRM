@@ -27,7 +27,7 @@ require_once("modules/AOW_WorkFlow/aow_utils.php");
 
 class AOW_WorkFlowController extends SugarController {
 
-    protected function action_getModuleFields()
+    protected function ApplicationgetModuleFields()
     {
         if (!empty($_REQUEST['aow_module']) && $_REQUEST['aow_module'] != '') {
             if(isset($_REQUEST['rel_field']) &&  $_REQUEST['rel_field'] != ''){
@@ -41,7 +41,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getRelatedModule()
+    protected function ApplicationgetRelatedModule()
     {
         if (!empty($_REQUEST['aow_module']) && $_REQUEST['aow_module'] != '') {
             if(isset($_REQUEST['rel_field']) &&  $_REQUEST['rel_field'] != ''){
@@ -55,7 +55,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getModuleRelationships()
+    protected function ApplicationgetModuleRelationships()
     {
         if (!empty($_REQUEST['aow_module']) && $_REQUEST['aow_module'] != '') {
             if(isset($_REQUEST['rel_field']) &&  $_REQUEST['rel_field'] != ''){
@@ -70,7 +70,7 @@ class AOW_WorkFlowController extends SugarController {
     }
 
 
-    protected function action_getModuleOperatorField(){
+    protected function ApplicationgetModuleOperatorField() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -143,7 +143,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getFieldTypeOptions(){
+    protected function ApplicationgetFieldTypeOptions() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -218,7 +218,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getActionFieldTypeOptions(){
+    protected function ApplicationgetActionFieldTypeOptions() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -270,22 +270,22 @@ class AOW_WorkFlowController extends SugarController {
                 break;
         }
 
-        foreach($app_list_strings['aow_action_type_list'] as $key => $keyValue){
+        foreach ($app_list_strings['aow_Applicationtype_list'] as $key => $keyValue) {
             if(!in_array($key, $valid_opp)){
-                unset($app_list_strings['aow_action_type_list'][$key]);
+                unset($app_list_strings['aow_Applicationtype_list'][$key]);
             }
         }
 
         if($view == 'EditView'){
-            echo "<select type='text' style='width:178px;' name='$aow_field' id='$aow_field' title='' tabindex='116'>". get_select_options_with_id($app_list_strings['aow_action_type_list'], $value) ."</select>";
+            echo "<select type='text' style='width:178px;' name='$aow_field' id='$aow_field' title='' tabindex='116'>" . get_select_options_with_id($app_list_strings['aow_Applicationtype_list'], $value) . "</select>";
         }else{
-            echo $app_list_strings['aow_action_type_list'][$value];
+            echo $app_list_strings['aow_Applicationtype_list'][$value];
         }
         die;
 
     }
 
-    protected function action_getModuleFieldType()
+    protected function ApplicationgetModuleFieldType()
     {
         if(isset($_REQUEST['rel_field']) &&  $_REQUEST['rel_field'] != ''){
             $rel_module = getRelatedModule($_REQUEST['aow_module'],$_REQUEST['rel_field']);
@@ -332,7 +332,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getModuleFieldTypeSet()
+    protected function ApplicationgetModuleFieldTypeSet()
     {
         $module = $_REQUEST['aow_module'];
         $fieldname = $_REQUEST['aow_fieldname'];
@@ -372,7 +372,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getModuleField()
+    protected function ApplicationgetModuleField()
     {
         if(isset($_REQUEST['view'])) $view = $_REQUEST['view'];
         else $view= 'EditView';
@@ -384,7 +384,7 @@ class AOW_WorkFlowController extends SugarController {
         die;
     }
 
-    protected function action_getRelFieldTypeSet()
+    protected function ApplicationgetRelFieldTypeSet()
     {
         $module = $_REQUEST['aow_module'];
         $fieldname = $_REQUEST['aow_fieldname'];
@@ -414,7 +414,7 @@ class AOW_WorkFlowController extends SugarController {
 
     }
 
-    protected function action_getRelActionFieldTypeOptions(){
+    protected function ApplicationgetRelActionFieldTypeOptions() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -443,25 +443,25 @@ class AOW_WorkFlowController extends SugarController {
         }*/
         $valid_opp = array('Value','Field');
 
-        foreach($app_list_strings['aow_rel_action_type_list'] as $key => $keyValue){
+        foreach ($app_list_strings['aow_rel_Applicationtype_list'] as $key => $keyValue) {
             if(!in_array($key, $valid_opp)){
-                unset($app_list_strings['aow_rel_action_type_list'][$key]);
+                unset($app_list_strings['aow_rel_Applicationtype_list'][$key]);
             }
         }
 
         if($view == 'EditView'){
-            echo "<select type='text' style='width:178px;' name='$aow_field' id='$aow_field' title='' tabindex='116'>". get_select_options_with_id($app_list_strings['aow_rel_action_type_list'], $value) ."</select>";
+            echo "<select type='text' style='width:178px;' name='$aow_field' id='$aow_field' title='' tabindex='116'>" . get_select_options_with_id($app_list_strings['aow_rel_Applicationtype_list'], $value) . "</select>";
         }else{
-            echo $app_list_strings['aow_rel_action_type_list'][$value];
+            echo $app_list_strings['aow_rel_Applicationtype_list'][$value];
         }
         die;
 
     }
 
-    protected function action_getAction(){
+    protected function ApplicationgetAction() {
         global $beanList, $beanFiles;
 
-        $action_name = 'action'.$_REQUEST['aow_action'];
+        $Applicationname = 'action' . $_REQUEST['aow_action'];
         $line = $_REQUEST['line'];
 
         if($_REQUEST['aow_module'] == '' || !isset($beanList[$_REQUEST['aow_module']])){
@@ -469,22 +469,23 @@ class AOW_WorkFlowController extends SugarController {
             die;
         }
 
-        if(file_exists('custom/modules/AOW_Actions/actions/'.$action_name.'.php')){
+        if (file_exists('custom/modules/AOW_Actions/actions/' . $Applicationname . '.php')) {
 
-            require_once('custom/modules/AOW_Actions/actions/'.$action_name.'.php');
+            require_once('custom/modules/AOW_Actions/actions/' . $Applicationname . '.php');
 
-        } else if(file_exists('modules/AOW_Actions/actions/'.$action_name.'.php')){
+        }
+        else if (file_exists('modules/AOW_Actions/actions/' . $Applicationname . '.php')) {
 
-            require_once('modules/AOW_Actions/actions/'.$action_name.'.php');
+            require_once('modules/AOW_Actions/actions/' . $Applicationname . '.php');
 
         } else {
             echo '';
             die;
         }
 
-        $custom_action_name = "custom" . $action_name;
-        if(class_exists($custom_action_name)){
-            $action_name = $custom_action_name;
+        $custom_Applicationname = "custom" . $Applicationname;
+        if (class_exists($custom_Applicationname)) {
+            $Applicationname = $custom_Applicationname;
         }
 
         $id = '';
@@ -497,7 +498,7 @@ class AOW_WorkFlowController extends SugarController {
             $params = unserialize(base64_decode($aow_action->parameters));
         }
 
-        $action = new $action_name($id);
+        $action = new $Applicationname($id);
 
         require_once($beanFiles[$beanList[$_REQUEST['aow_module']]]);
         $bean = new $beanList[$_REQUEST['aow_module']];
@@ -505,7 +506,7 @@ class AOW_WorkFlowController extends SugarController {
         die;
     }
 
-    protected function action_getEmailField()
+    protected function ApplicationgetEmailField()
     {
         $module = $_REQUEST['aow_module'];
         $aow_field = $_REQUEST['aow_newfieldname'];
@@ -548,7 +549,7 @@ class AOW_WorkFlowController extends SugarController {
     }
 
 
-    protected function action_testFlow(){
+    protected function ApplicationtestFlow() {
 
         echo 'Started<br />';
         require_once('modules/AOW_WorkFlow/AOW_WorkFlow.php');

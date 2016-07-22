@@ -48,7 +48,8 @@
   
  class NotesController extends SugarController
 {
-	function action_save(){
+
+	 function Applicationsave() {
 		require_once('include/upload_file.php');
 		
 		// CCL - Bugs 41103 and 43751.  41103 address the issue where the parent_id is set, but
@@ -97,7 +98,7 @@
 		}
 	}
 	
-    function action_editview(){
+	 function Applicationeditview() {
 		$this->view = 'edit';
 		$GLOBALS['view'] = $this->view;
 		if(!empty($_REQUEST['deleteAttachment'])){

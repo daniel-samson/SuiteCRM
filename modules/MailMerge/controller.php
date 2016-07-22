@@ -39,10 +39,6 @@
 
 require_once('soap/SoapHelperFunctions.php');
 class MailMergeController extends SugarController{
-	function __construct(){
-		parent::__construct();
-	}
-
     /**
      * @deprecated deprecated since version 7.6, PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code, use __construct instead
      */
@@ -57,8 +53,12 @@ class MailMergeController extends SugarController{
         self::__construct();
     }
 
+    function __construct() {
 
-    public function action_search(){
+        parent::__construct();
+    }
+
+    public function Applicationsearch() {
         //set ajax view
         $this->view = 'ajax';
         //get the module

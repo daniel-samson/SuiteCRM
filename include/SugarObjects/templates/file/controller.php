@@ -50,7 +50,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  require_once('include/formbase.php');
  class FileController extends SugarController{
 
- 	function action_save(){
+	 function Applicationsave() {
  		$move=false;
  		$file = new File();
  		$file = populateFromPost('', $file);

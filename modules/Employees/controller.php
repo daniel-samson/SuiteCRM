@@ -38,10 +38,6 @@
  ********************************************************************************/
 
 class EmployeesController extends SugarController{
-	function __construct(){
-		parent::__construct();
-	}
-
     /**
      * @deprecated deprecated since version 7.6, PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code, use __construct instead
      */
@@ -56,8 +52,12 @@ class EmployeesController extends SugarController{
         self::__construct();
     }
 
+    function __construct() {
 
-	function action_editview(){
+        parent::__construct();
+    }
+
+    function Applicationeditview() {
 		if(is_admin($GLOBALS['current_user']) || $_REQUEST['record'] == $GLOBALS['current_user']->id)
 			$this->view = 'edit';
 		else
@@ -65,7 +65,7 @@ class EmployeesController extends SugarController{
 		return true;
 	}
 
-	protected function action_delete()
+    protected function Applicationdelete()
 	{
 	    if($_REQUEST['record'] != $GLOBALS['current_user']->id && $GLOBALS['current_user']->isAdminForModule('Users'))
         {

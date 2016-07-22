@@ -41,7 +41,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 class RemindersController extends SugarController {
 
-    public function action_getInviteesPersonName() {
+    public function ApplicationgetInviteesPersonName() {
         $personModules = array('Users', 'Contacts', 'Leads');
         $ret = array();
         $invitees = $_REQUEST['invitees'];
@@ -60,7 +60,7 @@ class RemindersController extends SugarController {
         die();
     }
 
-    public function action_getUserPreferencesForReminders() {
+    public function ApplicationgetUserPreferencesForReminders() {
         echo Reminder::loadRemindersDefaultValuesDataJson();
         die();
     }

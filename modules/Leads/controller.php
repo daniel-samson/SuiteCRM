@@ -38,10 +38,6 @@
  ********************************************************************************/
 
 class LeadsController extends SugarController{
-	function __construct(){
-		parent::__construct();
-	}
-
     /**
      * @deprecated deprecated since version 7.6, PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code, use __construct instead
      */
@@ -55,6 +51,11 @@ class LeadsController extends SugarController{
         }
         self::__construct();
     }
+
+	function __construct() {
+
+		parent::__construct();
+	}
 
 	function pre_editview(){
 		//IF we have a prospect id leads convert it to a lead
@@ -73,7 +74,8 @@ class LeadsController extends SugarController{
 		}
 		return true;
 	}
-	function action_editview(){
+
+	function Applicationeditview() {
 		$this->view = 'edit';
 		return true;
 	}
@@ -89,7 +91,7 @@ class LeadsController extends SugarController{
 				   	  }
 				   }
 				}
-        		$this->action_default();
+				$this->Applicationdefault();
                 $this->_processed = true;
             }else{
             	$this->view = 'convertlead';

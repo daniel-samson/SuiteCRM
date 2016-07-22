@@ -41,7 +41,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 class AdministrationController extends SugarController
 {
-    public function action_savetabs()
+
+    public function Applicationsavetabs()
     {
         require_once('include/SubPanel/SubPanelDefinitions.php');
         require_once('modules/MySettings/TabController.php');
@@ -68,7 +69,7 @@ class AdministrationController extends SugarController
         header("Location: index.php?module=Administration&action=ConfigureTabs");
     }
 
-    public function action_savelanguages()
+    public function Applicationsavelanguages()
     {
         global $sugar_config;
         $toDecode = html_entity_decode  ($_REQUEST['disabled_langs'], ENT_QUOTES);
@@ -84,14 +85,14 @@ class AdministrationController extends SugarController
 
 
     /**
-     * action_saveglobalsearchsettings
+     * Applicationsaveglobalsearchsettings
      *
      * This method handles saving the selected modules to display in the Global Search Settings.
      * It instantiates an instance of UnifiedSearchAdvanced and then calls the saveGlobalSearchSettings
      * method.
      *
      */
-    public function action_saveglobalsearchsettings()
+    public function Applicationsaveglobalsearchsettings()
     {
 		 global $current_user, $app_strings;
 
@@ -115,24 +116,7 @@ class AdministrationController extends SugarController
     	 }
     }
 
-    /**
-     *
-     * Merge current FTS config with the new passed parameters:
-     *
-     * We want to merge the current $sugar_config settings with those passed in
-     * to be able to add additional parameters which are currently not supported
-     * in the UI (i.e. additional curl settings for elastic search for auth)
-     *
-     * @param array $config
-     * @return array
-     */
-    protected function mergeFtsConfig($type, $newConfig)
-    {
-        $currentConfig = SugarConfig::getInstance()->get("full_text_engine.{$type}", array());
-        return array_merge($currentConfig, $newConfig);
-    }
-
-    public function action_UpdateAjaxUI()
+    public function ApplicationUpdateAjaxUI()
     {
         require_once('modules/Configurator/Configurator.php');
         $cfg = new Configurator();
@@ -142,14 +126,7 @@ class AdministrationController extends SugarController
         $this->view = "configureajaxui";
     }
 
-
-    /*
-     * action_callRebuildSprites
-     *
-     * This method is responsible for actually running the SugarSpriteBuilder class to rebuild the sprites.
-     * It is called from the ajax request issued by RebuildSprites.php.
-     */
-    public function action_callRebuildSprites()
+    public function ApplicationcallRebuildSprites()
     {
         global $current_user;
         $this->view = 'ajax';
@@ -164,5 +141,32 @@ class AdministrationController extends SugarController
             echo $mod_strings['LBL_SPRITES_NOT_SUPPORTED'];
             $GLOBALS['log']->error($mod_strings['LBL_SPRITES_NOT_SUPPORTED']);
         }
+    }
+
+
+    /*
+     * ApplicationcallRebuildSprites
+     *
+     * This method is responsible for actually running the SugarSpriteBuilder class to rebuild the sprites.
+     * It is called from the ajax request issued by RebuildSprites.php.
+     */
+
+    /**
+     *
+     * Merge current FTS config with the new passed parameters:
+     *
+     * We want to merge the current $sugar_config settings with those passed in
+     * to be able to add additional parameters which are currently not supported
+     * in the UI (i.e. additional curl settings for elastic search for auth)
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    protected function mergeFtsConfig($type, $newConfig) {
+
+        $currentConfig = SugarConfig::getInstance()->get("full_text_engine.{$type}", array());
+
+        return array_merge($currentConfig, $newConfig);
     }
 }

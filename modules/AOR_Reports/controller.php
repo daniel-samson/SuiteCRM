@@ -28,7 +28,16 @@ require_once("modules/AOR_Reports/aor_utils.php");
 
 class AOR_ReportsController extends SugarController {
 
-    protected function action_getModuleFields()
+    function ApplicationgetVarDefs() {
+
+        if ($_REQUEST['aor_module']) {
+            $bean = BeanFactory::getBean($_REQUEST['aor_module']);
+            echo json_encode((array) $bean->field_defs[$_REQUEST['aor_request']]);
+            die();
+        }
+    }
+
+    protected function ApplicationgetModuleFields()
     {
         if (!empty($_REQUEST['aor_module']) && $_REQUEST['aor_module'] != '') {
             if(isset($_REQUEST['rel_field']) &&  $_REQUEST['rel_field'] != ''){
@@ -42,15 +51,8 @@ class AOR_ReportsController extends SugarController {
         die;
 
     }
-    function action_getVarDefs(){
-        if($_REQUEST['aor_module']){
-            $bean = BeanFactory::getBean($_REQUEST['aor_module']);
-            echo json_encode((array)$bean->field_defs[$_REQUEST['aor_request']]);
-            die();
-        }
-    }
 
-    protected function action_getModuleTreeData()
+    protected function ApplicationgetModuleTreeData()
     {
         if (!empty($_REQUEST['aor_module']) && $_REQUEST['aor_module'] != '') {
             ob_start();
@@ -61,7 +63,7 @@ class AOR_ReportsController extends SugarController {
         die;
     }
 
-    protected function action_getModuleRelationships()
+    protected function ApplicationgetModuleRelationships()
     {
         if (!empty($_REQUEST['aor_module']) && $_REQUEST['aor_module'] != '') {
             echo getModuleRelationships($_REQUEST['aor_module']);
@@ -69,7 +71,7 @@ class AOR_ReportsController extends SugarController {
         die;
     }
 
-    protected function action_changeReportPage(){
+    protected function ApplicationchangeReportPage() {
         $tableId = !empty($_REQUEST['table_id']) ? $_REQUEST['table_id'] : '';
         $group = !empty($_REQUEST['group']) ? $_REQUEST['group'] : '';
         $offset = !empty($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
@@ -82,7 +84,7 @@ class AOR_ReportsController extends SugarController {
         die();
     }
 
-    protected function action_getParametersForReport(){
+    protected function ApplicationgetParametersForReport() {
         if(empty($_REQUEST['record'])){
             echo json_encode(array());
             return;
@@ -100,7 +102,7 @@ class AOR_ReportsController extends SugarController {
         echo json_encode($conditions);
     }
 
-    protected function action_getChartsForReport(){
+    protected function ApplicationgetChartsForReport() {
         if(empty($_REQUEST['record'])){
             echo json_encode(array());
             return;
@@ -117,7 +119,7 @@ class AOR_ReportsController extends SugarController {
         echo json_encode($charts);
     }
 
-    protected function action_addToProspectList(){
+    protected function ApplicationaddToProspectList() {
         global $beanList;
 
         require_once('modules/Relationships/Relationship.php');
@@ -151,21 +153,21 @@ class AOR_ReportsController extends SugarController {
         die;
     }
 
-    protected function action_chartReport()
+    protected function ApplicationchartReport()
     {
         $this->bean->build_report_chart(null, AOR_Report::CHART_TYPE_CHARTJS);
 
         die;
     }
 
-    protected function action_export()
+    protected function Applicationexport()
     {
         $this->bean->user_parameters = requestToUserParameters();
         $this->bean->build_report_csv();
         die;
     }
 
-    protected function action_downloadPDF()
+    protected function ApplicationdownloadPDF()
     {
         error_reporting(0);
         require_once('modules/AOS_PDF_Templates/PDF_Lib/mpdf.php');
@@ -247,7 +249,7 @@ class AOR_ReportsController extends SugarController {
         die;
     }
 
-    protected function action_getModuleFunctionField(){
+    protected function ApplicationgetModuleFunctionField() {
         global $app_list_strings;
 
         $view = $_REQUEST['view'];
@@ -265,7 +267,7 @@ class AOR_ReportsController extends SugarController {
     }
 
 
-    protected function action_getModuleOperatorField(){
+    protected function ApplicationgetModuleOperatorField() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -335,7 +337,7 @@ class AOR_ReportsController extends SugarController {
 
     }
 
-    protected function action_getFieldTypeOptions(){
+    protected function ApplicationgetFieldTypeOptions() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -409,7 +411,7 @@ class AOR_ReportsController extends SugarController {
 
     }
 
-    protected function action_getActionFieldTypeOptions(){
+    protected function ApplicationgetActionFieldTypeOptions() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -466,22 +468,22 @@ class AOR_ReportsController extends SugarController {
                 break;
         }
 
-        foreach($app_list_strings['aor_action_type_list'] as $key => $keyValue){
+        foreach ($app_list_strings['aor_Applicationtype_list'] as $key => $keyValue) {
             if(!in_array($key, $valid_opp)){
-                unset($app_list_strings['aor_action_type_list'][$key]);
+                unset($app_list_strings['aor_Applicationtype_list'][$key]);
             }
         }
 
         if($view == 'EditView'){
-            echo "<select type='text' style='width:178px;' name='$aor_field' id='$aor_field' title='' tabindex='116'>". get_select_options_with_id($app_list_strings['aor_action_type_list'], $value) ."</select>";
+            echo "<select type='text' style='width:178px;' name='$aor_field' id='$aor_field' title='' tabindex='116'>" . get_select_options_with_id($app_list_strings['aor_Applicationtype_list'], $value) . "</select>";
         }else{
-            echo $app_list_strings['aor_action_type_list'][$value];
+            echo $app_list_strings['aor_Applicationtype_list'][$value];
         }
         die;
 
     }
 
-    protected function action_getModuleFieldType()
+    protected function ApplicationgetModuleFieldType()
     {
         if(isset($_REQUEST['rel_field']) &&  $_REQUEST['rel_field'] != ''){
             $rel_module = getRelatedModule($_REQUEST['aor_module'],$_REQUEST['rel_field']);
@@ -533,7 +535,7 @@ class AOR_ReportsController extends SugarController {
 
     }
 
-    protected function action_getModuleFieldTypeSet()
+    protected function ApplicationgetModuleFieldTypeSet()
     {
         $module = $_REQUEST['aor_module'];
         $fieldname = $_REQUEST['aor_fieldname'];
@@ -572,7 +574,7 @@ class AOR_ReportsController extends SugarController {
 
     }
 
-    protected function action_getModuleField()
+    protected function ApplicationgetModuleField()
     {
         if(isset($_REQUEST['view'])) $view = $_REQUEST['view'];
         else $view= 'EditView';
@@ -584,7 +586,7 @@ class AOR_ReportsController extends SugarController {
         die;
     }
 
-    protected function action_getRelFieldTypeSet()
+    protected function ApplicationgetRelFieldTypeSet()
     {
         $module = $_REQUEST['aor_module'];
         $fieldname = $_REQUEST['aor_fieldname'];
@@ -614,7 +616,7 @@ class AOR_ReportsController extends SugarController {
 
     }
 
-    protected function action_getRelActionFieldTypeOptions(){
+    protected function ApplicationgetRelActionFieldTypeOptions() {
 
         global $app_list_strings, $beanFiles, $beanList;
 
@@ -643,16 +645,16 @@ class AOR_ReportsController extends SugarController {
         }*/
         $valid_opp = array('Value');
 
-        foreach($app_list_strings['aor_rel_action_type_list'] as $key => $keyValue){
+        foreach ($app_list_strings['aor_rel_Applicationtype_list'] as $key => $keyValue) {
             if(!in_array($key, $valid_opp)){
-                unset($app_list_strings['aor_rel_action_type_list'][$key]);
+                unset($app_list_strings['aor_rel_Applicationtype_list'][$key]);
             }
         }
 
         if($view == 'EditView'){
-            echo "<select type='text' style='width:178px;' name='$aor_field' id='$aor_field' title='' tabindex='116'>". get_select_options_with_id($app_list_strings['aor_rel_action_type_list'], $value) ."</select>";
+            echo "<select type='text' style='width:178px;' name='$aor_field' id='$aor_field' title='' tabindex='116'>" . get_select_options_with_id($app_list_strings['aor_rel_Applicationtype_list'], $value) . "</select>";
         }else{
-            echo $app_list_strings['aor_rel_action_type_list'][$value];
+            echo $app_list_strings['aor_rel_Applicationtype_list'][$value];
         }
         die;
 

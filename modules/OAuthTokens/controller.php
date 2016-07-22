@@ -40,7 +40,8 @@
 
 class OAuthTokensController extends SugarController
 {
-	protected function action_delete()
+
+	protected function Applicationdelete()
 	{
 	    global $current_user;
 		//do any pre delete processing

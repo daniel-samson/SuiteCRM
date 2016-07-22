@@ -23,11 +23,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 class ProjectController extends SugarController {
     //Loads the gantt view
-    function action_view_GanttChart() {
+    function Applicationview_GanttChart() {
         $this->view = 'GanttChart';
     }
 
-    function action_generate_chart(){
+    function Applicationgenerate_chart() {
         global $db;
 
         include_once('modules/Project/gantt.php');
@@ -74,7 +74,7 @@ class ProjectController extends SugarController {
     }
 
     //Create new project task
-    function action_update_GanttChart(){
+    function Applicationupdate_GanttChart() {
 
         global $current_user, $db;
 
@@ -138,71 +138,15 @@ class ProjectController extends SugarController {
     }
 
     //mark project task as deleted
-    function action_delete_task(){
-        $id = $_POST['task_id'];
-        $task = new ProjectTask();
-        $task->retrieve($id);
-        $task->deleted = '1';
-        $task->save();
+
+    public function IsNullOrEmptyString($question) {
+
+        return (!isset($question) || trim($question) === '');
     }
 
     //Returns new task start date including any lag via ajax call
-    function action_get_end_date(){
-        global $db,  $timeDate;
 
-        $timeDate = new TimeDate();
-        $id = $_POST['task_id'];
-        $lag = $_POST['lag'];
-
-        //Get the end date of the projectTask in raw database format
-        $query = "SELECT date_finish FROM project_task WHERE id = '{$id}'";
-        $end_date = $db->getOne($query);
-        //Add 1 day onto end date for first day of new task
-        $start_date = date('Y-m-d', strtotime($end_date. ' + 1 days'));
-        //Add lag onto start date
-        $start_date = date('Y-m-d', strtotime($start_date. ' + '.$lag.' days'));
-
-        echo $timeDate->to_display_date($start_date, true);
-        die();
-
-    }
-
-
-    //updates the order of the tasks
-    function action_update_order(){
-
-       //convert quotes in json string back to normal
-        $jArray = htmlspecialchars_decode($_POST['orderArray']);
-
-        //create object/array from json data
-        $orderArray = json_decode($jArray, true);
-
-        foreach($orderArray as $id => $order_number){
-
-            $task = new ProjectTask();
-            $task->retrieve($id);
-            $task->order_number = $order_number;
-            $task->save();
-
-        }
-    }
-   //returns tasks for predecessor in the add task pop-up form
-    function action_get_predecessors(){
-
-        $project = new Project();
-        $project->retrieve($_REQUEST["project_id"]);
-        //Get project tasks
-        $Task = BeanFactory::getBean('ProjectTask');
-        $tasks = $Task->get_full_list("order_number", "project_task.project_id = '".$project->id."'");
-        echo '<option rel="0" value="0">None</option>';
-        foreach ($tasks as $task) {
-            echo '<option rel="'.$task->id.'" value="'.$task->project_task_id.'">'.$task->name.'</opion>';
-        }
-        die();
-    }
-
-
-    function create_task($name, $start, $end, $project_id, $milestone_flag, $status, $project_task_id, $predecessors, $rel_type, $duration, $duration_unit, $resource, $percent_complete, $description,$actual_duration,$order_number){
+    function create_task($name, $start, $end, $project_id, $milestone_flag, $status, $project_task_id, $predecessors, $rel_type, $duration, $duration_unit, $resource, $percent_complete, $description, $actual_duration, $order_number) {
 
         $task = new ProjectTask();
         $task->name = $name;
@@ -224,7 +168,10 @@ class ProjectController extends SugarController {
         $task->save();
     }
 
-    function update_task($id, $name, $start, $end, $project_id, $milestone_flag, $status, $predecessors, $rel_type, $duration, $duration_unit, $resource, $percent_complete, $description,$actual_duration){
+
+    //updates the order of the tasks
+
+    function update_task($id, $name, $start, $end, $project_id, $milestone_flag, $status, $predecessors, $rel_type, $duration, $duration_unit, $resource, $percent_complete, $description, $actual_duration) {
 
         $task = new ProjectTask();
         $task->retrieve($id);
@@ -246,17 +193,84 @@ class ProjectController extends SugarController {
         $task->save();
     }
 
+    //returns tasks for predecessor in the add task pop-up form
+
+    function Applicationdelete_task() {
+        $id = $_POST['task_id'];
+        $task = new ProjectTask();
+        $task->retrieve($id);
+        $task->deleted = '1';
+        $task->save();
+    }
+
+    function Applicationget_end_date() {
+        global $db,  $timeDate;
+
+        $timeDate = new TimeDate();
+        $id = $_POST['task_id'];
+        $lag = $_POST['lag'];
+
+        //Get the end date of the projectTask in raw database format
+        $query = "SELECT date_finish FROM project_task WHERE id = '{$id}'";
+        $end_date = $db->getOne($query);
+        //Add 1 day onto end date for first day of new task
+        $start_date = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+        //Add lag onto start date
+        $start_date = date('Y-m-d', strtotime($start_date. ' + '.$lag.' days'));
+
+        echo $timeDate->to_display_date($start_date, true);
+        die();
+
+    }
+
+    function Applicationupdate_order() {
+
+       //convert quotes in json string back to normal
+        $jArray = htmlspecialchars_decode($_POST['orderArray']);
+
+        //create object/array from json data
+        $orderArray = json_decode($jArray, true);
+
+        foreach($orderArray as $id => $order_number){
+
+            $task = new ProjectTask();
+            $task->retrieve($id);
+            $task->order_number = $order_number;
+            $task->save();
+
+        }
+    }
+
 
     /*********************************** Resource chart functions **************************************/
 
     //Loads the resource chart view
-    function action_ResourceList(){
+    function Applicationget_predecessors() {
+
+        $project = new Project();
+        $project->retrieve($_REQUEST["project_id"]);
+        //Get project tasks
+        $Task = BeanFactory::getBean('ProjectTask');
+        $tasks = $Task->get_full_list("order_number", "project_task.project_id = '".$project->id."'");
+        echo '<option rel="0" value="0">None</option>';
+        foreach ($tasks as $task) {
+            echo '<option rel="'.$task->id.'" value="'.$task->project_task_id.'">'.$task->name.'</opion>';
+        }
+        die();
+    }
+
+    //Updates the resource chart based on specified dates and users
+
+
+    function ApplicationResourceList() {
 
         $this->view = 'ResourceList';
     }
 
-    //Updates the resource chart based on specified dates and users
-    function action_update_chart(){
+
+    //Get tasks for resource chart tooltips
+
+    function Applicationupdate_chart() {
         global $db;
         include('modules/Project/chart.php');
 
@@ -368,9 +382,27 @@ class ProjectController extends SugarController {
         die();
     }
 
+    /*********************************** Utility functions **************************************/
 
-    //Get tasks for resource chart tooltips
-    function action_Tooltips(){
+
+    //Returns the total number of days between two dates
+
+    function count_days($start_date, $end_date) {
+
+        $d1 = new DateTime($start_date);
+        $d2 = new DateTime($end_date);
+        //If the task's end date is before chart's start date return -1 to make sure task starts on first day of the chart
+        if ($d2 < $d1) {
+            return -1;
+        }
+        $difference = $d1->diff($d2);
+
+        return $difference->days;
+    }
+
+    // Function for basic field validation (present and neither empty nor only white space
+
+    function ApplicationTooltips() {
 
         global $mod_strings;
 
@@ -391,26 +423,6 @@ class ProjectController extends SugarController {
         echo '</table>';
 
         die();
-    }
-
-    /*********************************** Utility functions **************************************/
-
-
-    //Returns the total number of days between two dates
-    function count_days($start_date, $end_date){
-        $d1 = new DateTime($start_date);
-        $d2 = new DateTime($end_date);
-        //If the task's end date is before chart's start date return -1 to make sure task starts on first day of the chart
-        if($d2 < $d1){
-            return -1;
-        }
-        $difference = $d1->diff($d2);
-        return $difference->days;
-    }
-
-    // Function for basic field validation (present and neither empty nor only white space
-    public function IsNullOrEmptyString($question){
-        return (!isset($question) || trim($question)==='');
     }
 
 }

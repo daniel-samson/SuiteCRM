@@ -40,7 +40,8 @@
 
 class UserPreferencesController extends SugarController
 {
-	function action_save_rich_text_preferences() {
+
+    function Applicationsave_rich_text_preferences() {
         $this->view = 'ajax';
         global $current_user;
         if(!empty($current_user)) {

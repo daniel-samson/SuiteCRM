@@ -54,7 +54,7 @@ class CalendarController extends SugarController
     /**
      * Action SaveActivity
      */
-    protected function action_saveactivity()
+    protected function Applicationsaveactivity()
     {    
         $this->view = 'json';        
         
@@ -149,20 +149,52 @@ class CalendarController extends SugarController
         $this->view_object_map['jsonData'] = $jsonData;
     }
     
+    /**
+     * Retrieves current activity bean and checks access to action
+     *
+     * @param string $actionToCheck
+     *
+     * @return bool Result of check
+     */
+    protected function retrieveCurrentBean($actionToCheck = false) {
+
+        $module = $_REQUEST['current_module'];
+        $record = null;
+        if (!empty($_REQUEST['record'])) {
+            $record = $_REQUEST['record'];
+        }
+
+        require_once("data/BeanFactory.php");
+        $this->currentBean = BeanFactory::getBean($module, $record);
+
+        if (!empty($actionToCheck)) {
+            if (!$this->currentBean->ACLAccess($actionToCheck)) {
+                $this->view = 'json';
+                $jsonData = array(
+                    'access' => 'no',
+                );
+                $this->view_object_map['jsonData'] = $jsonData;
+
+                return false;
+            }
+        }
+
+        return true;
+    }
     
     /**
      * Action QuickEdit
      */
-    protected function action_quickedit()
+    protected function Applicationquickedit()
     {
         $this->view = 'quickedit';
-        
+
         if (!$this->retrieveCurrentBean('Detail')) {
             return;
         }
 
         $this->view_object_map['currentModule'] = $this->currentBean->module_dir;
-        $this->view_object_map['currentBean'] = $this->currentBean;    
+        $this->view_object_map['currentBean'] = $this->currentBean;
 
     }
     
@@ -170,65 +202,65 @@ class CalendarController extends SugarController
      * Action Reschedule
      * Used for drag & drop
      */
-    protected function action_reschedule()
+    protected function Applicationreschedule()
     {
         $this->view = 'json';
-        
-        $commit = true;                
-        
+
+        $commit = true;
+
         if (!$this->retrieveCurrentBean('Save')) {
             return;
-        }        
-        
+        }
+
         $_REQUEST['parent_name'] = $this->currentBean->parent_name;
-        
+
         $dateField = "date_start";
         if ($this->currentBean->module_dir == "Tasks") {
             $dateField = "date_due";
-        }            
+        }
 
         if (!empty($_REQUEST['calendar_style']) && $_REQUEST['calendar_style'] == "basic") {
-            list($tmp, $time) = explode(" ", $this->currentBean->$dateField);            
+            list($tmp, $time) = explode(" ", $this->currentBean->$dateField);
             list($date, $tmp) = explode(" ", $_REQUEST['datetime']);
-            $_REQUEST['datetime'] = $date . " " . $time;            
+            $_REQUEST['datetime'] = $date . " " . $time;
         }
         $_POST[$dateField] = $_REQUEST['datetime'];
-        
+
         if ($this->currentBean->module_dir == "Tasks" && !empty($this->currentBean->date_start)) {
             if ($GLOBALS['timedate']->fromUser($_POST['date_due'])->ts < $GLOBALS['timedate']->fromUser($this->currentBean->date_start)->ts) {
                 $this->view_object_map['jsonData'] = array(
                     'access' => 'no',
                     'errorMessage' => $GLOBALS['mod_strings']['LBL_DATE_END_ERROR'],
                 );
-                $commit = false; 
-            }   
+                $commit = false;
+            }
         }
-        
-        if ($commit) {            
+
+        if ($commit) {
             require_once('include/formbase.php');
-            $this->currentBean = populateFromPost("", $this->currentBean);                
-            $this->currentBean->save();        
-            $this->currentBean->retrieve($_REQUEST['record']);        
-                
+            $this->currentBean = populateFromPost("", $this->currentBean);
+            $this->currentBean->save();
+            $this->currentBean->retrieve($_REQUEST['record']);
+
             $this->view_object_map['jsonData'] = CalendarUtils::get_sendback_array($this->currentBean);
-        }    
+        }
     }
     
     /**
      * Action Remove
      */
-    protected function action_remove()
-    {
-        $this->view = 'json';        
-        
+    protected function Applicationremove() {
+
+        $this->view = 'json';
+
         if (!$this->retrieveCurrentBean('Delete')) {
             return;
         }
-                
+
         if ($this->currentBean->module_dir == "Meetings" || $this->currentBean->module_dir == "Calls") {
             if (!empty($_REQUEST['remove_all_recurrences']) && $_REQUEST['remove_all_recurrences']) {
                 CalendarUtils::markRepeatDeleted($this->currentBean);
-            }         
+            }
         }
 
         $this->currentBean->mark_deleted($_REQUEST['record']);
@@ -236,63 +268,31 @@ class CalendarController extends SugarController
         $this->view_object_map['jsonData'] = array(
             'access' => 'yes',
         );
-    
+
     }
     
     /**
      * Action Resize
      * Used for drag & drop resizing
      */
-    protected function action_resize()
-    {
-        $this->view = 'json';        
-        
+    protected function Applicationresize() {
+
+        $this->view = 'json';
+
         if (!$this->retrieveCurrentBean('Save')) {
             return;
         }
-        
+
         require_once('include/formbase.php');
         $this->currentBean = populateFromPost("", $this->currentBean);
         $this->currentBean->save();
-        
+
         $this->view_object_map['jsonData'] = array(
             'access' => 'yes',
         );
     }
     
-    
-    /**
-     * Retrieves current activity bean and checks access to action
-     * 
-     * @param string $actionToCheck
-     * @return bool Result of check
-     */
-    protected function retrieveCurrentBean($actionToCheck = false)
-    {    
-        $module = $_REQUEST['current_module'];        
-        $record = null;
-        if (!empty($_REQUEST['record'])) {
-            $record = $_REQUEST['record'];
-        }
-        
-        require_once("data/BeanFactory.php");        
-        $this->currentBean = BeanFactory::getBean($module, $record);        
-
-        if (!empty($actionToCheck)) {    
-            if (!$this->currentBean->ACLAccess($actionToCheck)) {
-                $this->view = 'json';
-                $jsonData = array(
-                    'access' => 'no',
-                );
-                $this->view_object_map['jsonData'] = $jsonData;
-                return false;    
-            }
-        }
-        
-        return true;
-    }
-    
-    protected function action_getActivities()
+    protected function ApplicationgetActivities()
     {
         $this->view = 'json';
         

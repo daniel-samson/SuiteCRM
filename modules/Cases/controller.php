@@ -47,7 +47,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 class CasesController extends SugarController {
 
-   public function action_get_kb_articles(){
+    public function Applicationget_kb_articles() {
         global $mod_strings;
         global $app_list_strings;
         $search = $_POST['search'];
@@ -96,7 +96,8 @@ class CasesController extends SugarController {
         }
         die();
     }
-    public function action_get_kb_article(){
+
+    public function Applicationget_kb_article() {
         global $mod_strings;
 
         $article_id = $_POST['article'];

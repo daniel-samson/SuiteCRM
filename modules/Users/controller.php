@@ -48,12 +48,22 @@ require_once("include/OutboundEmail/OutboundEmail.php");
 
 class UsersController extends SugarController
 {
+
+	/**
+	 * action "save" (with a lower case S that is for OSX users ;-)
+	 * @see SugarController::Applicationsave()
+	 */
+	public function Applicationsave() {
+
+		require 'modules/Users/Save.php';
+	}
+
 	/**
 	 * bug 48170
 	 * Action resetPreferences gets fired when user clicks on  'Reset User Preferences' button
 	 * This action is set in UserViewHelper.php
 	 */
-	protected function action_resetPreferences(){
+	protected function ApplicationresetPreferences() {
 	    if($_REQUEST['record'] == $GLOBALS['current_user']->id || ($GLOBALS['current_user']->isAdminForModule('Users'))){
 	        $u = new User();
 	        $u->retrieve($_REQUEST['record']);
@@ -63,11 +73,12 @@ class UsersController extends SugarController
 	        }
 	        else{
 	            SugarApplication::redirect("index.php?module=Users&record=".$_REQUEST['record']."&action=DetailView"); //bug 48170]
-	
+
 	        }
 	    }
-	}  
-	protected function action_delete()
+	}
+
+	protected function Applicationdelete()
 	{
 	    if($_REQUEST['record'] != $GLOBALS['current_user']->id && ($GLOBALS['current_user']->isAdminForModule('Users')
             ))
@@ -83,22 +94,23 @@ class UsersController extends SugarController
             $eapm = loadBean('EAPM');
             $eapm->delete_user_accounts($_REQUEST['record']);
             $GLOBALS['log']->info("Removing user's External Accounts");
-            
+
             SugarApplication::redirect("index.php?module=Users&action=index");
         }
-        else 
+		else
             sugar_die("Unauthorized access to administration.");
 	}
-	protected function action_wizard() 
+
+	protected function Applicationwizard()
 	{
 		$this->view = 'wizard';
 	}
 
-	protected function action_saveuserwizard() 
+	protected function Applicationsaveuserwizard()
 	{
 	    global $current_user, $sugar_config;
-	    
-	    // set all of these default parameters since the Users save action will undo the defaults otherwise
+
+		// set all of these default parameters since the Users save action will undo the defaults otherwise
 	    $_POST['record'] = $current_user->id;
 	    $_POST['is_admin'] = ( $current_user->is_admin ? 'on' : '' );
 	    $_POST['use_real_names'] = true;
@@ -109,26 +121,17 @@ class UsersController extends SugarController
         $_POST['mailmerge_on'] = 'on';
         $_POST['receive_notifications'] = $current_user->receive_notifications;
         $_POST['user_theme'] = (string) SugarThemeRegistry::getDefault();
-	    
-	    // save and redirect to new view
+
+		// save and redirect to new view
 	    $_REQUEST['return_module'] = 'Home';
 	    $_REQUEST['return_action'] = 'index';
 		require('modules/Users/Save.php');
 	}
 
-    protected function action_saveftsmodules()
+	protected function Applicationsaveftsmodules()
     {
         $this->view = 'fts';
         $GLOBALS['current_user']->setPreference('fts_disabled_modules', $_REQUEST['disabled_modules']);
-    }
-
-    /**
-     * action "save" (with a lower case S that is for OSX users ;-)
-     * @see SugarController::action_save()
-     */
-    public function action_save()
-    {
-        require 'modules/Users/Save.php';
     }
 }	
 

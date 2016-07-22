@@ -25,7 +25,7 @@
 
 class AOR_ChartsController extends SugarController {
 
-    protected function action_getImageMap() {
+    protected function ApplicationgetImageMap() {
         ob_start();
         global $current_user;
         if (!isset($_REQUEST['imageMapId'])) {

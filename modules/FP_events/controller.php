@@ -8,7 +8,7 @@
 class FP_eventsController extends SugarController
 {
 
-    public function action_markasinvited()
+    public function Applicationmarkasinvited()
     {
         global $db; 
 
@@ -46,7 +46,7 @@ class FP_eventsController extends SugarController
         }
     }
 
-    public function action_markasattended()
+    public function Applicationmarkasattended()
     {
         global $db;
 
@@ -84,7 +84,7 @@ class FP_eventsController extends SugarController
         }
     }
 
-    public function action_markasnotattended()
+    public function Applicationmarkasnotattended()
     {
         global $db;
 
@@ -122,7 +122,7 @@ class FP_eventsController extends SugarController
         }
     }
 
-    public function action_markasnotinvited()
+    public function Applicationmarkasnotinvited()
     {
         global $db;
 
@@ -160,7 +160,7 @@ class FP_eventsController extends SugarController
         }
     }
 
-    public function action_markasaccepted()
+    public function Applicationmarkasaccepted()
     {
         global $db;
 
@@ -198,7 +198,8 @@ class FP_eventsController extends SugarController
                 $res = $db->query($query3);
         }
     }
-    public function action_markasdeclined()
+
+    public function Applicationmarkasdeclined()
     {
         global $db;
 
@@ -236,7 +237,7 @@ class FP_eventsController extends SugarController
         }
     }
 
-    public function action_add_to_list(){
+    public function Applicationadd_to_list() {
 
         $ids = $_POST['subpanel_id'];
         $event_id = $_POST['return_id'];
@@ -352,7 +353,7 @@ class FP_eventsController extends SugarController
         die();
     }
 
-    public function action_sendinvitemails(){
+    public function Applicationsendinvitemails() {
         global $db;
         global $sugar_config;
         global $mod_strings;

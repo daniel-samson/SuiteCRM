@@ -10,7 +10,7 @@ include_once('modules/Favorites/Favorites.php');
 
 class FavoritesController extends SugarController{
 
-    public function action_create_record(){
+    public function Applicationcreate_record() {
         global $current_user;
 
         $favorite = BeanFactory::newBean('Favorites');
@@ -22,7 +22,7 @@ class FavoritesController extends SugarController{
         echo json_encode($favorite->id);
     }
 
-    public function action_remove_record(){
+    public function Applicationremove_record() {
         global $current_user;
 
         $favourite_class = new Favorites();
@@ -37,14 +37,14 @@ class FavoritesController extends SugarController{
 
     }
 
-    public function action_check_favorite(){
+    public function Applicationcheck_favorite() {
         global $current_user;
         $favourite_class = new Favorites();
         $return =  $favourite_class->getFavoriteID($_REQUEST['record_module'],$_REQUEST['record_id']);
         echo json_encode($return);
     }
 
-    public function action_get_sidebar_elements(){
+    public function Applicationget_sidebar_elements() {
         $favourite_class = new Favorites();
         $return = $favourite_class->getCurrentUserSidebarFavorites($_REQUEST['record_id']);
         echo json_encode($return);

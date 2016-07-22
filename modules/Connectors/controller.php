@@ -64,7 +64,7 @@ class ConnectorsController extends SugarController {
 	 * the data that was saved in the session.
 	 *
 	 */
-	function action_SetSearch(){
+	function ApplicationSetSearch() {
 		if(empty($_REQUEST)) {
 		   return;
 		}
@@ -107,7 +107,7 @@ class ConnectorsController extends SugarController {
 	 * This action it meant to handle the hover action on the listview.
 	 *
 	 */
-	function action_RetrieveSourceDetails() {
+	function ApplicationRetrieveSourceDetails() {
 		$this->view = 'ajax';
 		$source_id = $_REQUEST['source_id'];
         $record_id = $_REQUEST['record_id'];
@@ -154,7 +154,7 @@ class ConnectorsController extends SugarController {
 	}
 
 
-	function action_GetSearchForm(){
+	function ApplicationGetSearchForm() {
         $this->view = 'ajax';
 		if(!empty($_REQUEST['source_id'])){
 			//get the search fields and return the search form
@@ -205,7 +205,7 @@ class ConnectorsController extends SugarController {
 	function post_save(){}
 
 
-    function action_CallConnectorFunc() {
+	function ApplicationCallConnectorFunc() {
         $this->view = 'ajax';
         $json = getJSONobj();
 
@@ -228,7 +228,7 @@ class ConnectorsController extends SugarController {
         }
     }
 
-	function action_CallRest() {
+	function ApplicationCallRest() {
 		$this->view = 'ajax';
 
 		if(false === ($result=@file_get_contents($_REQUEST['url']))) {
@@ -245,7 +245,7 @@ class ConnectorsController extends SugarController {
 		}
 	}
 
-	function action_CallSoap() {
+	function ApplicationCallSoap() {
 	    $this->view = 'ajax';
 	    $source_id = $_REQUEST['source_id'];
 	    $module = $_REQUEST['module_id'];
@@ -270,7 +270,7 @@ class ConnectorsController extends SugarController {
 	}
 
 
-	function action_DefaultSoapPopup() {
+	function ApplicationDefaultSoapPopup() {
 		$this->view = 'ajax';
 	    $source_id = $_REQUEST['source_id'];
 	    $module = $_REQUEST['module_id'];
@@ -313,7 +313,7 @@ class ConnectorsController extends SugarController {
 	    }
 	}
 
-	function action_SaveModifyProperties() {
+	function ApplicationSaveModifyProperties() {
 		require_once('include/connectors/sources/SourceFactory.php');
 		$sources = array();
 		$properties = array();
@@ -345,7 +345,7 @@ class ConnectorsController extends SugarController {
 	    // END SUGAR INT
 	}
 
-	function action_SaveModifyDisplay()
+	function ApplicationSaveModifyDisplay()
 	{
 		if (empty($_REQUEST['display_sources'])) {
 			return;
@@ -581,13 +581,71 @@ class ConnectorsController extends SugarController {
 		// END SUGAR INT
 	}
 
+	function add_social_field($module, $field_name) {
 
 
+		$field = array(
+			array(
+				'name' => $field_name, 'label' => 'LBL_' . strtoupper($field_name), 'type' => 'varchar', 'module' => $module, 'ext1' => 'LIST', 'default_value' => '', 'mass_update' => false, 'required' => false, 'reportable' => false, 'audited' => false, 'importable' => 'false', 'duplicate_merge' => false,
+			)
+		);
+
+		$layout[$module] = $field_name;
+
+		require_once('ModuleInstall/ModuleInstaller.php');
+		$moduleInstaller = new ModuleInstaller();
+		$moduleInstaller->install_custom_fields($field);
+		//$moduleInstaller->addFieldsToLayout($layout);
+
+
+		$this->create_panel_on_view('detailview', $field, $module, 'LBL_PANEL_SOCIAL_FEED');
+		/* now add it to the edit view. */
+		$this->create_panel_on_view('editview', $field, $module, 'LBL_PANEL_SOCIAL_FEED');
+
+
+	}
+
+	private function create_panel_on_view($view, $field, $module, $panel_name) {
+
+		//require and create object.
+		require_once('modules/ModuleBuilder/parsers/ParserFactory.php');
+		$parser = ParserFactory::getParser($view, $module);
+
+		if (!array_key_exists($field['0']['name'], $parser->_fielddefs)) {
+			//add newly created fields to fielddefs as they wont be there.
+			$parser->_fielddefs[$field['0']['name']] = $field['0'];
+		}
+
+		if (!array_key_exists($panel_name, $parser->_viewdefs['panels'])) {
+			//create the layout for the row.
+			$field_defs = array(0 => $field['0']['name']);
+
+			//add the row to the panel.
+			$panel = array(0 => $field_defs);
+
+			//add the panel to the view.
+			$parser->_viewdefs['panels'][$panel_name] = $panel;
+
+			//save the panel.
+
+		}
+		else {
+			//if the panel already exists we need to push items on to it.
+			foreach ($parser->_viewdefs['panels'][$panel_name] as $row_key => $row) {
+				foreach ($row as $key_field => $single_field) {
+					if ($single_field == "(empty)") {
+						$parser->_viewdefs['panels'][$panel_name][$row_key][$key_field] = $field['0']['name'];
+					}
+				}
+			}
+		}
+		$parser->handleSave(false);
+	}
 
 	/**
-	 * action_SaveModifyMapping
+	 * ApplicationSaveModifyMapping
 	 */
-	function action_SaveModifyMapping() {
+	function ApplicationSaveModifyMapping() {
 		$mapping_sources = !empty($_REQUEST['mapping_sources']) ? explode(',', $_REQUEST['mapping_sources']) : array();
 		$mapping_values = !empty($_REQUEST['mapping_values']) ? explode(',', $_REQUEST['mapping_values']) : array();
 
@@ -655,8 +713,7 @@ class ConnectorsController extends SugarController {
 		// END SUGAR INT
 	}
 
-
-	function action_RunTest() {
+	function ApplicationRunTest() {
 	    $this->view = 'ajax';
 	    $source_id = $_REQUEST['source_id'];
 	    $source = SourceFactory::getSource($source_id);
@@ -687,13 +744,12 @@ class ConnectorsController extends SugarController {
 	    }
 	}
 
-
 	/**
-	 * action_RetrieveSources
+	 * ApplicationRetrieveSources
 	 * Returns a JSON encoded format of the Connectors that are configured for the system
 	 *
 	 */
-	function action_RetrieveSources() {
+	function ApplicationRetrieveSources() {
 		require_once('include/connectors/utils/ConnectorUtils.php');
 		$this->view = 'ajax';
 		$sources = ConnectorUtils:: getConnectors();
@@ -703,77 +759,6 @@ class ConnectorsController extends SugarController {
 		}
 	    $json = getJSONobj();
 	    echo $json->encode($results);
-	}
-
-	function add_social_field($module, $field_name)
-	{
-
-
-		$field = array(
-				array(
-						'name' => $field_name,
-						'label' => 'LBL_' . strtoupper($field_name),
-						'type' => 'varchar',
-						'module' => $module,
-						'ext1' => 'LIST',
-						'default_value' => '',
-						'mass_update' => false,
-						'required' => false,
-						'reportable' => false,
-						'audited' => false,
-						'importable' => 'false',
-						'duplicate_merge' => false,
-				)
-		);
-
-		$layout[$module] = $field_name;
-
-		require_once('ModuleInstall/ModuleInstaller.php');
-		$moduleInstaller = new ModuleInstaller();
-		$moduleInstaller->install_custom_fields($field);
-		//$moduleInstaller->addFieldsToLayout($layout);
-
-
-		$this->create_panel_on_view('detailview', $field, $module, 'LBL_PANEL_SOCIAL_FEED');
-		/* now add it to the edit view. */
-		$this->create_panel_on_view('editview', $field, $module, 'LBL_PANEL_SOCIAL_FEED');
-
-
-	}
-
-	private function create_panel_on_view($view, $field, $module, $panel_name){
-		//require and create object.
-		require_once('modules/ModuleBuilder/parsers/ParserFactory.php');
-		$parser = ParserFactory::getParser($view, $module);
-
-		if(!array_key_exists( $field['0']['name'],$parser->_fielddefs )){
-			//add newly created fields to fielddefs as they wont be there.
-			$parser->_fielddefs[ $field['0']['name'] ] = $field['0'];
-		}
-
-		if(!array_key_exists( $panel_name, $parser->_viewdefs['panels'] )){
-			//create the layout for the row.
-			$field_defs = array(0 => $field['0']['name']);
-
-			//add the row to the panel.
-			$panel = array( 0 => $field_defs );
-
-			//add the panel to the view.
-			$parser->_viewdefs['panels'][ $panel_name ] = $panel;
-
-			//save the panel.
-
-		}else{
-			//if the panel already exists we need to push items on to it.
-			foreach($parser->_viewdefs['panels'][ $panel_name ] as $row_key => $row){
-				foreach($row as $key_field => $single_field){
-					if($single_field == "(empty)"){
-						$parser->_viewdefs['panels'][ $panel_name ][ $row_key ][ $key_field ] = $field['0']['name'];
-					}
-				}
-			}
-		}
-		$parser->handleSave(false);
 	}
 
 }

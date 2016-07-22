@@ -40,30 +40,31 @@
 
 class ContactsController extends SugarController
 {
-	function action_Popup(){
+
+    function ApplicationPopup() {
 		if(!empty($_REQUEST['html']) && $_REQUEST['html'] == 'mail_merge'){
 			$this->view = 'mailmergepopup';
 		}else{
 			$this->view = 'popup';
 		}
 	}
-	
-    function action_ValidPortalUsername()
+
+    function ApplicationValidPortalUsername()
     {
 		$this->view = 'validportalusername';
     }
 
-    function action_RetrieveEmail()
+    function ApplicationRetrieveEmail()
     {
         $this->view = 'retrieveemail';	
     }
 
-    function action_ContactAddressPopup()
+    function ApplicationContactAddressPopup()
     {
 		$this->view = 'contactaddresspopup';
     }
-  
-    function action_CloseContactAddressPopup()
+
+    function ApplicationCloseContactAddressPopup()
     {
     	$this->view = 'closecontactaddresspopup';
     }    
