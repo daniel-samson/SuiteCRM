@@ -251,3 +251,14 @@
 .tab-content .tab-pane-NOBOOTSTRAPTOGGLER:not(.active) {
   display: none;
 }
+
+@media (max-width: $sm-breakpoint) {
+  .content {
+    .nav > li > a.first-tab-xs {
+      width: 144px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+  }
+}
