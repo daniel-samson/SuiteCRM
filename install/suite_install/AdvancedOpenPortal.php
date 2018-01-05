@@ -125,7 +125,8 @@ function installAOPHooks()
 function getTemplates()
 {
     $templates = array();
-    $templates['case_closure_email_template'] = array('name' => 'Case Closure',
+    $templates['case_closure_email_template'] = array(
+        'name' => 'Case Closure',
         'published' => 'off',
         'description' => 'Template for informing a contact that their case has been closed.',
         'subject' => '$acase_name [CASE:$acase_case_number] closed',
@@ -144,9 +145,10 @@ function getTemplates()
 					    <tr><td>Resolution</td><td>$acase_resolution</td></tr>
 					    </tbody></table>');
 
-    $templates['joomla_account_creation_email_template'] = array('name' => 'Joomla Account Creation',
+    $templates['joomla_account_creation_email_template'] = array(
+        'name' => 'Joomla Account Creation',
         'published' => 'off',
-        'description' => "Template used when informing a contact that they've been given an account on the joomla portal.",
+        'description' => 'Template used when informing a contact that they\'ve been given an account on the joomla portal.',
         'subject' => 'Support Portal Account Created',
         'type' => 'system',
         'body' => 'Hi $contact_name,
@@ -156,9 +158,10 @@ function getTemplates()
 					    <p>An account has been created for you at <a href="$portal_address">$portal_address</a>.</p>
 					    <p>You may login using this email address and the password $joomla_pass</p>');
 
-    $templates['case_creation_email_template'] = array('name' => 'Case Creation',
+    $templates['case_creation_email_template'] = array(
+        'name' => 'Case Creation',
         'published' => 'off',
-        'description' => "Template to send to a contact when a case is received from them.",
+        'description' => 'Template to send to a contact when a case is received from them.',
         'subject' => '$acase_name [CASE:$acase_case_number]',
         'type' => 'system',
         'body' => 'Hi $contact_first_name $contact_last_name,
@@ -175,9 +178,10 @@ function getTemplates()
 					    <tr><td>Description</td><td>$acase_description</td></tr>
 					    </tbody></table>');
 
-    $templates['contact_email_template'] = array('name' => 'Contact Case Update',
+    $templates['contact_email_template'] = array(
+        'name' => 'Contact Case Update',
         'published' => 'off',
-        'description' => "Template to send to a contact when their case is updated.",
+        'description' => 'Template to send to a contact when their case is updated.',
         'subject' => '$acase_name update [CASE:$acase_case_number]',
         'type' => 'system',
         'body' => 'Hi $user_first_name $user_last_name,
@@ -191,9 +195,10 @@ function getTemplates()
 					    <p><strong>$user_first_name $user_last_name said:</strong></p>
 					    <p style="padding-left:30px;">$aop_case_updates_description</p>');
 
-    $templates['user_email_template'] = array('name' => 'User Case Update',
+    $templates['user_email_template'] = array(
+        'name' => 'User Case Update',
         'published' => 'off',
-        'description' => "Email template to send to a Sugar user when their case is updated.",
+        'description' => 'Email template to send to a Sugar user when their case is updated.',
         'subject' => '$acase_name (# $acase_case_number) update',
         'type' => 'system',
         'body' => 'Hi $user_first_name $user_last_name,
@@ -209,6 +214,21 @@ function getTemplates()
 					   <p><strong>$contact_first_name $contact_last_name, said:</strong></p>
 					   <p style="padding-left:30px;">$aop_case_updates_description</p>
 					   <p>You may review this Case at: $sugarurl/index.php?module=Cases&action=DetailView&record=$acase_id;</p>
+					   ');
+
+    $templates['confirmed_opt_in_template'] = array(
+        'name' => 'Confirmed Opt In',
+        'published' => 'off',
+        'description' => 'Email template to send to a contact to confirm they have opted in.',
+        'subject' => 'Confirm Opt In',
+        'type' => 'system',
+        'body' => 'Hi $user_first_name $user_last_name,
+
+					   Please confirm that you have opted in by selecting the following link:
+                            $sugarurl/index.php?module=Cases&action=DetailView&record=$acase_id;',
+        'body_html' => '<p>Hi $user_first_name $user_last_name,</p>
+					   <p>Please confirm that you have opted in by selecting the following link:</p>
+					   <p>$sugarurl/index.php?entryPoint=ConfirmOptIn&from=$contact_email1</p>
 					   ');
 
     return $templates;
