@@ -38,6 +38,7 @@
  * reasonably feasible for  technical reasons, the Appropriate Legal Notices must
  * display the words  "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
+
 class Basic extends SugarBean
 {
     /**
@@ -84,18 +85,58 @@ class Basic extends SugarBean
      */
     public function getEmailAddressConfirmOptInTick($emailField)
     {
+        global $sugar_config;
+        global $app_list_strings;
+        global $app_strings;
+        global $mod_strings;
+
         $this->getEmailAddressValidateArguments($emailField);
 
-        global $sugar_config, $app_strings;
-
         $tickHtml = '';
-        $confirmOptIn = $this->getEmailAddressConfirmOptIn($emailField);
-        if ($confirmOptIn && $sugar_config['email_enable_confirm_opt_in']) {
-            $tickTitle = $app_strings['LBL_CONFIRM_OPT_IN_TITLE'];
-            $tickHtml = '<span class="confirm-opt-in-tick" title="' . $tickTitle . '">&#10004;</span>';
+
+        if ($sugar_config['email_enable_confirm_opt_in']) {
+            $template = new Sugar_Smarty();
+            $template->assign('APP', $app_strings);
+            $template->assign('APP_LIST_STRINGS', $app_list_strings);
+            $template->assign('MOD', $mod_strings);
+            $template->assign('OPT_IN_STATUS', $this->getEmailAddressOptInStatus($emailField));
+            $tickHtml = $template->fetch('include/SugarObjects/templates/basic/tpls/displayEmailAddressOptInField.tpl');
         }
 
         return $tickHtml;
+    }
+
+
+    /**
+     * @global array $sugar_config
+     * @global \LoggerManager $log
+     * @param string $emailField
+     * @return string
+     */
+    public function getEmailAddressOptInStatus($emailField)
+    {
+        $emailAddress = $this->getEmailAddressConfirmOptIn($emailField);
+
+        if($emailAddress !== null) {
+            if($emailAddress->invalid_email) {
+                return 'INVALID_EMAIL';
+            }
+
+            if ($emailAddress->opt_out == "1") {
+                return 'OPT_OUT';
+            }
+
+            if ($emailAddress->confirm_opt_in == "1") {
+                return "OPT_IN_PENDING_EMAIL_CONFIRMED";
+            } elseif(!empty($emailAddress->opt_in_email_created)) {
+                return "OPT_IN_PENDING_EMAIL_SENT";
+            } elseif(empty($emailAddress->opt_in_email_created)) {
+                return "OPT_IN_PENDING_EMAIL_NOT_SENT";
+            }
+        }
+
+        // Otherwise
+        return 'UNKNOWN_OPT_IN_STATUS';
     }
 
     /**
@@ -103,7 +144,7 @@ class Basic extends SugarBean
      * @global array $sugar_config
      * @global \LoggerManager $log
      * @param string $emailField
-     * @return boolean
+     * @return \EmailAddress|\SugarBean
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
@@ -113,17 +154,16 @@ class Basic extends SugarBean
 
         global $sugar_config;
 
-        if (!$sugar_config['email_enable_confirm_opt_in']) {
+        if (!$sugar_config['email_enable_confirm_opt_in']) {#
             global $log;
             $log->warn('Confirm Opt In is not enabled.');
-            return true;
+            return false;
         }
 
         $emailAddressId = $this->getEmailAddressId($emailField);
-        $emailAddress = BeanFactory::getBean('EmailAddresses', $emailAddressId);
-        $confirmOptIn = $emailAddress->confirm_opt_in;
-
-        return $confirmOptIn;
+        /** @var EmailAddress $emailAddressBean */
+        $emailAddressBean = BeanFactory::getBean('EmailAddresses');
+        return  $emailAddressBean->retrieve($emailAddressId);
     }
 
     /**
@@ -134,24 +174,23 @@ class Basic extends SugarBean
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    private function getEmailAddressId($emailField)
+    protected function getEmailAddressId($emailField)
     {
-        $this->getEmailAddressValidateArguments($emailField);
+        global $log;
 
         $emailAddress = $this->cleanUpEmailAddress($this->{$emailField});
 
         if (!$emailAddress) {
-            global $log;
+
             $log->warn('Trying to get an empty email address.');
             return null;
         }
 
-        if (empty($this->emailAddress->addresses)) {
-            $this->retrieve();
-        }
+        $this->retrieve();
 
         $found = false;
-        foreach ($this->emailAddress->addresses as $address) {
+        $addresses = $this->emailAddress->addresses;
+        foreach ($addresses as $address) {
             if ($this->cleanUpEmailAddress($address['email_address']) === $emailAddress) {
                 $found = true;
                 $emailAddressId = $address['email_address_id'];
@@ -160,7 +199,9 @@ class Basic extends SugarBean
         }
 
         if (!$found) {
-            throw new RuntimeException('A Basic bean has not selected email address. (' . $emailAddress . ')');
+            // Changed exception to error as demo data is never selected.
+            $log->fatal('A Basic bean has not selected email address. (' . $emailAddress . ')');
+            return null;
         }
 
         return $emailAddressId;
