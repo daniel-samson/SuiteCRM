@@ -104,4 +104,9 @@ class EmailAddress extends SugarEmailAddress
 		    return SugarBean::save($id);
 		}
 	}
+
+	public function confirmOptIn()
+    {
+        $this->confirm_opt_in = 1;
+    }
 }
