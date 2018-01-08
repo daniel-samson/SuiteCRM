@@ -23,6 +23,12 @@ function retrieveData(page_id, callback){
         success : function(data) {
             var pageContent = data;
 
+            // update mobile tab text
+            var mobileTabUl = $('#first-tab-menu-xs').children();
+            var currentMobileLink = $(mobileTabUl[page_id]).find('a');
+            var currentTabText = currentMobileLink.text();
+            $('a#xstab0').text(currentTabText);
+
             outputPage(page_id,pageContent);
             if(_cb) _cb();
         },
