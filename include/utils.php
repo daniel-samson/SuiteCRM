@@ -3273,7 +3273,6 @@ function pre_login_check()
 							document.getElementById("cant_login").value=1;
 							document.getElementById("login_button").disabled = true;
 							document.getElementById("user_name").disabled = true;
-							//document.getElementById("user_password").disabled = true;
 						}
 						</script>';
         }
@@ -3584,9 +3583,9 @@ function return_bytes($val)
 {
     $val = trim($val);
     $last = strtolower($val{strlen($val) - 1});
+    $val = (int)$val;
 
     switch ($last) {
-        // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
         case 'm':

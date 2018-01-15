@@ -367,37 +367,88 @@ class InboundEmail extends SugarBean
         $filterCriteria = null;
 
 
-        foreach ($filter as $filterField => $filterFieldValue) {
-            if (empty($filterFieldValue)) {
+        if(!empty($filter)) {foreach($filter as $filterField => $filterFieldValue) {
+            if(empty($filterFieldValue)){
+
                 continue;
             }
 
-            // Convert to a blank string as NULL will break the IMAP request
-            if ($filterCriteria == null) {
-                $filterCriteria = '';
+                // Convert to a blank string as NULL will break the IMAP request
+                if ($filterCriteria == null) {
+                    $filterCriteria = '';
+                }
+
+                $filterCriteria .= ' ' . $filterField . ' "' . $filterFieldValue . '" ';
+            }
+        }
+
+        if (empty($filterCriteria) && $sortCriteria === SORTDATE) {
+            // Performance fix when no filters are enabled
+            $totalMsgs = imap_num_msg($this->conn);
+            $mailboxInfo['Nmsgs'] = $totalMsgs;
+
+            if ($sortOrder === 0) {
+                // Ascending order
+                if ($offset === "end") {
+                    $firstMsg = $totalMsgs - (int)$pageSize;
+                    $lastMsg = $totalMsgs;
+                } else if ($offset <= 0) {
+                    $firstMsg = 1;
+                    $lastMsg = $firstMsg + (int)$pageSize;
+                } else {
+                    $firstMsg = (int)$offset;
+                    $lastMsg = $firstMsg + (int)$pageSize;
+                }
+            } else {
+                // Descending order
+                if($offset === "end") {
+                    $firstMsg = 1;
+                    $lastMsg = $firstMsg + (int)$pageSize;
+                } else if($offset <= 0) {
+                    $firstMsg = $totalMsgs - (int)$pageSize;
+                    $lastMsg = $totalMsgs;
+                } else {
+                    $offset = ($totalMsgs - (int)$offset) - (int)$pageSize;
+                    $firstMsg = $offset;
+                    $lastMsg = $firstMsg + (int)$pageSize;
+                }
             }
 
-            $filterCriteria .= ' ' . $filterField . ' "' . $filterFieldValue . '" ';
+            $sequence  = $firstMsg . ':' . $lastMsg;
+            $emailSortedHeaders = imap_fetch_overview(
+                $this->conn,
+                $sequence
+            );
+
+            $uids = array_map(
+                function($x) {
+                    return $x->uid;
+                },
+                $emailSortedHeaders
+            );
+        } else {
+            // Filtered case and other sorting cases
+            // Returns an array of msgno's which are sorted and filtered
+            $emailSortedHeaders = imap_sort(
+                $this->conn,
+                $sortCriteria,
+                $sortOrder,
+                SE_UID,
+                $filterCriteria
+            );
+
+            $uids = array_slice($emailSortedHeaders, $offset, $pageSize);
+
+            $lastSequenceNumber = $mailboxInfo['Nmsgs'] = count($emailSortedHeaders);
+
+            // paginate
+            if ($offset === "end") {
+                $offset = $lastSequenceNumber - $pageSize;
+            } elseif ($offset <= 0) {
+                $offset = 0;
+            }
         }
-        // Returns an array of msgno's which are sorted and filtered
-        $emailSortedHeaders = imap_sort(
-            $this->conn,
-            $sortCriteria,
-            $sortOrder,
-            FT_UID,
-            $filterCriteria
-        );
 
-        $lastSequenceNumber = $mailboxInfo['Nmsgs'] = count($emailSortedHeaders);
-
-        // paginate
-        if ($offset === "end") {
-            $offset = $lastSequenceNumber - $pageSize;
-        } elseif ($offset <= 0) {
-            $offset = 0;
-        }
-
-        $uids = array_slice($emailSortedHeaders, $offset, $pageSize);
 
         $uids = implode(',', $uids);
 
@@ -424,19 +475,23 @@ class InboundEmail extends SugarBean
         }
 
 
-        usort($emailHeaders, function ($a, $b) use ($sortCRM) {  // defaults to DESC order
-            if($a[$sortCRM] === $b[$sortCRM]) {
-                return 0;
-            } elseif($a[$sortCRM] < $b[$sortCRM]) {
-                return 1;
-            } else {
-                return -1;
+        usort(
+            $emailHeaders,
+            function ($a, $b) use ($sortCRM) {  // defaults to DESC order
+                if($a[$sortCRM] === $b[$sortCRM]) {
+                    return 0;
+                } elseif($a[$sortCRM] < $b[$sortCRM]) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
+        );
 
-        });
-        if (!$sortOrder) {
+        // Make it ASC order
+        if(!$sortOrder) {
             array_reverse($emailHeaders);
-        } // Make it ASC order
+        };
 
 
         return array(
@@ -5213,39 +5268,42 @@ class InboundEmail extends SugarBean
             $email->type = 'inbound';
 
 
-            if (empty($email->date_entered)) {
+            if(empty($email->date_entered)) {
 
-                // find if string has (UTC) in timezone
-                $pattern = "/\([\w-+\/]+\)/i";
-                $timezoneTextFound = preg_match($pattern, $header[0]->date);
+                $possibleFormats = [
+                    \DateTime::RFC2822,
+                    str_replace(['D, '], '', \DateTime::RFC2822), // day-of-week is optional
+                    str_replace([':s'], '', \DateTime::RFC2822), // seconds are optional
+                    str_replace(['D, ', ':s'], '', \DateTime::RFC2822), // day-of-week is optional, seconds are optional
+                    \DateTime::RFC822,
+                    str_replace(['D, '], '', \DateTime::RFC822), // day is optional
+                    str_replace([':s'], '', \DateTime::RFC822), // seconds are optional
+                    str_replace(['D, ', ':s'], '', \DateTime::RFC822), // day is optional, seconds are optional
+                ];
 
-                $dateTimeFormat = 'D, d M Y H:i:s O *';
-                if ($timezoneTextFound === false || $timezoneTextFound === 0) {
-                    $dateTimeFormat = 'D, d M Y H:i:s O';
+                foreach ($possibleFormats  as $possibleFormat) {
+                    $dateTime = \DateTime::createFromFormat( $possibleFormat, $header[0]->date);
+                    if ($dateTime !== false) {
+                        break;
+                    }
                 }
 
-                $dateTime = DateTime::createFromFormat(
-                    $dateTimeFormat,
-                    $header[0]->date
-                );
-
-                if (!empty($dateTime)) {
-                    $email->date_entered = $timedate->asUser($dateTime, $current_user);
-                    $email->date_modified = $timedate->asUser($dateTime, $current_user);
-                    $email->date_start = $timedate->asUserDate($dateTime);
-                    $email->time_start = $timedate->asUserTime($dateTime);
-
-                    $systemUser = BeanFactory::getBean('Users', 1);
-                    $email->created_by = $systemUser->id;
-                    $email->created_by_name = $systemUser->name;
-                    $email->modified_user_id = $systemUser->id;
-                    $email->modified_by_name = $systemUser->name;
-                } else {
+                if ($dateTime === false) {
                     throw new Exception(
-                        'DateTime::createFromFormat (' . $dateTimeFormat . ',' . $header[0]->date . '): ' .
-                        'expected DateTime but it returned FALSE or empty.'
+                        sprintf('Expected header Date to comply with RFC882 or RFC2882, but actual is "%s"', $header[0]->date)
                     );
                 }
+
+                $email->date_entered = $timedate->asUser($dateTime, $current_user);
+                $email->date_modified = $timedate->asUser($dateTime, $current_user);
+                $email->date_start = $timedate->asUserDate($dateTime);
+                $email->time_start = $timedate->asUserTime($dateTime);
+
+                $systemUser =  BeanFactory::getBean('Users', 1);
+                $email->created_by = $systemUser->id;
+                $email->created_by_name = $systemUser->name;
+                $email->modified_user_id = $systemUser->id;
+                $email->modified_by_name = $systemUser->name;
             }
 
             $email->status = 'unread'; // this is used in Contacts' Emails SubPanel

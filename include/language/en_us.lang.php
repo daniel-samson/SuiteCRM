@@ -380,9 +380,9 @@ $app_list_strings = array(
         'Administrator' => 'Administrator',
     ),
     'user_status_dom' => array(
-            'Active' => 'Active',
-            'Inactive' => 'Inactive',
-        ),
+        'Active' => 'Active',
+        'Inactive' => 'Inactive',
+    ),
     'user_factor_auth_interface_dom' => array(
         'FactorAuthEmailCode' => 'Email Code',
     ),
@@ -1255,9 +1255,11 @@ $app_strings = array(
     'LBL_EMAIL_ERROR_SENDING' => 'Error Sending Email. Please contact your administrator for assistance.',
     'LBL_EMAIL_ERROR_SAVING' => 'Error Saving Email. Please contact your administrator for assistance.',
     'LBL_EMAIL_FOLDERS' => SugarThemeRegistry::current()->getImage('icon_email_folder', 'align=absmiddle border=0',
-            null, null, '.gif', '') . 'Folders',
+            null, null, '.gif', ''
+        ) . 'Folders',
     'LBL_EMAIL_FOLDERS_SHORT' => SugarThemeRegistry::current()->getImage('icon_email_folder',
-        'align=absmiddle border=0', null, null, '.gif', ''),
+        'align=absmiddle border=0', null, null, '.gif', ''
+    ),
     'LBL_EMAIL_FOLDERS_ACTIONS' => 'Move To',
     'LBL_EMAIL_FOLDERS_ADD' => 'Add',
     'LBL_EMAIL_FOLDERS_ADD_DIALOG_TITLE' => 'Add New Folder',
@@ -1387,9 +1389,11 @@ $app_strings = array(
 
     'LBL_EMAIL_SEARCHING' => 'Conducting Search',
     'LBL_EMAIL_SEARCH' => SugarThemeRegistry::current()->getImage('Search', 'align=absmiddle border=0', null, null,
-        '.gif', ''),
+        '.gif', ''
+    ),
     'LBL_EMAIL_SEARCH_SHORT' => SugarThemeRegistry::current()->getImage('Search', 'align=absmiddle border=0', null,
-        null, '.gif', ''),
+        null, '.gif', ''
+    ),
     'LBL_EMAIL_SEARCH_ADVANCED' => 'Advanced Search',
     'LBL_EMAIL_SEARCH_DATE_FROM' => 'Date From',
     'LBL_EMAIL_SEARCH_DATE_UNTIL' => 'Date Until',
@@ -2339,6 +2343,7 @@ $app_strings = array(
     'LBL_OK' => 'Ok',
 
     'LBL_COLUMNS_FILTER_HEADER_TITLE' => 'Choose columns',
+    'LBL_COLUMN_CHOOSER' => 'Column Chooser',
     'LBL_SAVE_CHANGES_BUTTON_TITLE' => 'Save changes',
     'LBL_DISPLAYED' => 'Displayed',
     'LBL_HIDDEN' => 'Hidden',
@@ -3388,16 +3393,6 @@ $app_list_strings['aow_operator_list']['Contains'] = 'Contains';
 $app_list_strings['aow_operator_list']['Starts_With'] = 'Starts With';
 $app_list_strings['aow_operator_list']['Ends_With'] = 'Ends With';
 $app_list_strings['aow_operator_list']['is_null'] = 'Is Null';
-$app_list_strings['aow_sql_operator_list']['Equal_To'] = '=';
-$app_list_strings['aow_sql_operator_list']['Not_Equal_To'] = '!=';
-$app_list_strings['aow_sql_operator_list']['Greater_Than'] = '>';
-$app_list_strings['aow_sql_operator_list']['Less_Than'] = '<';
-$app_list_strings['aow_sql_operator_list']['Greater_Than_or_Equal_To'] = '>=';
-$app_list_strings['aow_sql_operator_list']['Less_Than_or_Equal_To'] = '<=';
-$app_list_strings['aow_sql_operator_list']['Contains'] = 'LIKE';
-$app_list_strings['aow_sql_operator_list']['Starts_With'] = 'LIKE';
-$app_list_strings['aow_sql_operator_list']['Ends_With'] = 'LIKE';
-$app_list_strings['aow_sql_operator_list']['is_null'] = 'IS NULL';
 $app_list_strings['aow_process_status_list']['Complete'] = 'Complete';
 $app_list_strings['aow_process_status_list']['Running'] = 'Running';
 $app_list_strings['aow_process_status_list']['Pending'] = 'Pending';

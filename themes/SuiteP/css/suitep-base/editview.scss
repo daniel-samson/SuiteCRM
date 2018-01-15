@@ -3963,7 +3963,7 @@ select#sales_stage_advanced {
   border-radius: 50%;
 }
 
-#user_password {
+#username_password {
   width: 150px;
 }
 
@@ -5235,6 +5235,7 @@ object {
 
 @media (min-width: 980px) {
   #dialog1_c {
+    z-index: 5;
     margin-top: 100px;
     margin-left: 40%;
   }
