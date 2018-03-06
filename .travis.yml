@@ -44,9 +44,9 @@ before_script:
 script:
   - \[ -f "config_si.php" \] || cp tests/travis_config_si.php config_si.php
   - php tests/testinstall.php
-  - ./vendor/bin/codecept run -f unit --steps -vvv --debug
+#  - ./vendor/bin/codecept run -f unit --steps -vvv --debug
   # Install OAuth2 demo data
-  - cat tests/_data/api_data.sql | mysql -u root -D automated_tests
+  - mysql -u root -D automated_tests -e "source tests/_data/api_data.sql"
   # Debug api_data
   - mysql -u root -D automated_tests -v -e "SELECT * FROM oauth2clients;"
   #
