@@ -35,7 +35,7 @@ before_script:
   - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/000-default.conf; fi
   - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf; fi
   # Install OAuth2 demo data
-  cat tests/_data/api_data.sql | mysql -u root automated_tests
+  - cat tests/_data/api_data.sql | mysql -u root automated_tests
   # Optimise build by removing x-debug
   - phpenv config-rm xdebug.ini
   # Install composer
