@@ -54,7 +54,7 @@ after_script:
   - cat .htaccess
   - cat tests/_data/api_data.sql
   # Break travis build when an SQL Query failed
-  - if grep -R "Query Failed" test.log; then echo exit 255; fi
+  - if grep -R "Query Failed" suitecrm.log; then echo exit 255; fi
 branches:
   only:
     - master
