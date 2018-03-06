@@ -98,9 +98,9 @@ class Administration extends SugarBean
             }
         }
 
-        if ($displayWarning && $smtp_error) {
-            displayAdminError(translate('WARN_NO_SMTP_SERVER_AVAILABLE_ERROR', 'Administration'));
-        }
+//        if ($displayWarning && $smtp_error) {
+//            displayAdminError(translate('WARN_NO_SMTP_SERVER_AVAILABLE_ERROR', 'Administration'));
+//        }
 
         return $smtp_error;
     }
