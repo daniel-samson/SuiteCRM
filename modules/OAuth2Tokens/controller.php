@@ -1,11 +1,9 @@
-{*
-
+<?PHP
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
-
  * SuiteCRM is an extension to SugarCRM Community Edition developed by Salesagility Ltd.
- * Copyright (C) 2011 - 2014 Salesagility Ltd.
+ * Copyright (C) 2011 - 2018 Salesagility Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -38,10 +36,28 @@
  * display the words  "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  ********************************************************************************/
 
+class OAuth2TokensController extends SugarController
+{
 
-
-
-*}
-
-
-<IFRAME frameborder="0" marginwidth="0" marginheight="0" bgcolor="#FFFFFF" SRC="{$iframeURL}" TITLE="{$iframeURL}" NAME="SUGARIFRAME" ID="SUGARIFRAME" WIDTH="100%" height="1000"></IFRAME>
+    /**
+     * Mass update is only used for revoking tokens at the moment
+     */
+    public function action_massupdate()
+    {
+        if (!empty($_REQUEST['select_entire_list'])) {
+            $tokens = $this->bean->get_full_list();
+            if ($tokens) {
+                foreach ($tokens as $token) {
+                    $token->token_is_revoked = true;
+                    $token->save();
+                }
+            }
+        } elseif (!empty($_REQUEST['mass'])) {
+            foreach ($_REQUEST['mass'] as $id) {
+                $token = BeanFactory::getBean('OAuth2Tokens', $id);
+                $token->token_is_revoked = true;
+                $token->save();
+            }
+        }
+    }
+}

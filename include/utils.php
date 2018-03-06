@@ -294,7 +294,7 @@ function get_sugar_config_defaults()
         'email_default_client' => 'sugar',
         'email_default_delete_attachments' => true,
         'email_enable_auto_send_opt_in' => false,
-        'email_enable_confirm_opt_in' => '',
+        'email_enable_confirm_opt_in' => SugarEmailAddress::COI_STAT_DISABLED,
         'filter_module_fields' => array(
             'Users' => array(
                 'show_on_employees',
@@ -4541,7 +4541,7 @@ function get_dashlets_dialog_icon($module = '', $width = '32', $height = '32', $
         return $app_strings['LBL_NO_IMAGE'];
     }
 
-    return SugarThemeRegistry::current()->getImage($iconName, "align=\"$align\" border=\"0\"", $width, $height);
+    return $iconName;
 }
 
 // works nicely to change UTF8 strings that are html entities - good for PDF conversions

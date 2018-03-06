@@ -38,17 +38,4 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 *}
-<span class="email-opt-in-container">
-    {if $OPT_IN_STATUS === 'OPT_IN_PENDING_EMAIL_CONFIRMED'}
-        <span class="email-opt-in email-opt-in-confirmed" title="{$APP.LBL_OPT_IN_CONFIRMED}">✓</span>
-        <span class="email-opt-in email-opt-in-confirmed" title="{$APP.LBL_OPT_IN}">✓</span>
-    {elseif $OPT_IN_STATUS === 'OPT_IN_PENDING_EMAIL_SENT'}
-        <span class="email-opt-in email-opt-in-sent" title="{$APP.LBL_OPT_IN_PENDING_EMAIL_SENT}">✓</span>
-    {elseif $OPT_IN_STATUS === 'OPT_IN_PENDING_EMAIL_NOT_SENT'}
-        <span class="email-opt-in email-opt-in-not-sent" title="{$APP.LBL_OPT_IN_PENDING_EMAIL_NOT_SENT}">✓</span>
-    {elseif $OPT_IN_STATUS === 'OPT_OUT'}
-        <span class="email-opt-in email-opt-in-opt-out" title="{$APP.LBL_OPT_IN_OPT_OUT}">❌</span>
-    {elseif $OPT_IN_STATUS === 'INVALID'}
-        <span class="email-opt-in email-opt-in-invalid" title="{$APP.LBL_OPT_IN_INVALID}">?</span>
-    {/if}
-</span>
+<span class="email-opt-in-container"><span class="email-opt-in {$optInFlagClass}" title="{$optInFlagTitle}">{$optInFlagText}</span></span>
