@@ -47,7 +47,7 @@ script:
   # Install OAuth2 demo data
   - cat tests/_data/api_data.sql | mysql -u root automated_tests
   - ./vendor/bin/codecept run -f unit --steps -vvv --debug
-  - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run -f api --steps -vvv --d; fi
+  - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run -f api --steps -vvv --debug; fi
 after_script:
   - cat suitecrm.log
   - cat .htaccess
