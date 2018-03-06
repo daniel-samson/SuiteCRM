@@ -44,12 +44,10 @@ before_script:
 script:
   - \[ -f "config_si.php" \] || cp tests/travis_config_si.php config_si.php
   - php tests/testinstall.php
-#  - ./vendor/bin/codecept run -f unit --steps -vvv --debug
+  - ./vendor/bin/codecept run -f unit --steps -vvv --debug
   # Install OAuth2 demo data
   - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
-  # Debug api_data
-  - mysql -u root -D automated_tests -v -e "SELECT * FROM oauth2clients;"
-  #
+  # Run API functional tests
   - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run -f api --steps -vvv --debug; fi
 after_script:
   - cat suitecrm.log
