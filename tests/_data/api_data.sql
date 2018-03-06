@@ -23,30 +23,6 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `oauth2clients`
---
-
-CREATE TABLE `oauth2clients` (
-  `id` char(36) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `date_entered` datetime DEFAULT NULL,
-  `date_modified` datetime DEFAULT NULL,
-  `modified_user_id` char(36) DEFAULT NULL,
-  `created_by` char(36) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
-  `secret` varchar(4098) DEFAULT NULL,
-  `redirect_url` varchar(255) DEFAULT NULL,
-  `is_confidential` tinyint(1) DEFAULT NULL,
-  `allowed_grant_type` varchar(255) DEFAULT 'password',
-  `duration_value` int(11) DEFAULT NULL,
-  `duration_amount` int(11) DEFAULT NULL,
-  `duration_unit` varchar(255) DEFAULT 'Duration Unit',
-  `assigned_user_id` char(36) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --
 -- Dumping data for table `oauth2clients`
 --
@@ -60,13 +36,6 @@ INSERT INTO `oauth2clients` (`id`, `name`, `date_entered`, `date_modified`, `mod
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `oauth2clients`
---
-ALTER TABLE `oauth2clients`
-  ADD PRIMARY KEY (`id`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
