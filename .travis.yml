@@ -20,21 +20,22 @@ before_script:
   - mysql -e "CREATE DATABASE automated_tests;"
   - mysql -u root -e "CREATE USER 'automated_tests'@'localhost' IDENTIFIED BY 'automated_tests';"
   - mysql -u root -e "GRANT ALL PRIVILEGES ON automated_tests.* TO 'automated_tests'@'localhost';"
-  # Install apache
-  - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
-  # Enable php-fpm
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-  - sudo a2enmod rewrite actions fastcgi alias
-  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
-  - sudo chown -R travis:travis /var/lib/apache2/fastcgi
-  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  # Configure apache virtual hosts
-  - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/000-default.conf
-  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
-  - sudo service apache2 restart
+  # Install apache -images with PHP 7 or above
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo apt-get update; fi
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo apt-get install apache2 libapache2-mod-fastcgi; fi
+  # Enable php-fpm  -images with PHP 7 or above
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/; fiversions/$(phpenv version-name)/etc/php-fpm.conf
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv; fi/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo a2enmod rewrite actions fastcgi alias; fi
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars; fi
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo chown -R travis:travis /var/lib/apache2/fastcgi; fi
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm; fi
+  # Configure apache virtual hosts -images with PHP 7 or above
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/000-default.conf; fi
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/; fi000-default.conf
+  - if [[ "5.6" =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x images"; else sudo service apache2 restart; fi
+  # Optimise build by removing x-debug
   - phpenv config-rm xdebug.ini
   # Install composer
   - composer install
