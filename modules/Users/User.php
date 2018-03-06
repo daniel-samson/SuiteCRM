@@ -578,7 +578,6 @@ class User extends Person
 
         //No SMTP server is set up Error.
         $admin = new Administration();
-        $smtp_error = $admin->checkSmtpError();
 
         // only admin user can change 2 factor authentication settings
         if ($smtp_error || $isUpdate && !is_admin($current_user)) {
