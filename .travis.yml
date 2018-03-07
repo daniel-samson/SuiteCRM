@@ -49,12 +49,13 @@ script:
   - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
   # Run API functional tests
   - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run -f api --steps -vvv --debug; fi
+  # Break travis build when an SQL Query failed
+    - if grep -R "Query Failed" suitecrm.log; then echo exit 1; fi
 after_script:
   - cat suitecrm.log
   - cat .htaccess
   - cat tests/_data/api_data.sql
-  # Break travis build when an SQL Query failed
-  - if grep -R "Query Failed" suitecrm.log; then echo exit 255; fi
+
 branches:
   only:
     - master
