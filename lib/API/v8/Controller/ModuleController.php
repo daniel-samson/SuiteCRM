@@ -436,8 +436,6 @@ class ModuleController extends ApiController
             throw $exception;
         }
 
-
-
         if (
             isset($body['data']['id'])
             && !empty($body['data']['id'])
@@ -445,6 +443,10 @@ class ModuleController extends ApiController
 
             $beanID = $body['data']['id'];
             $bean = \BeanFactory::getBean($moduleName, $beanID);
+
+            if (!$bean->ACLAccess('save')) {
+                throw new NotAllowed();
+            }
 
             if ($bean instanceof \SugarBean) {
                 return $this->generateJsonApiExceptionResponse(
@@ -544,6 +546,10 @@ class ModuleController extends ApiController
             throw $exception;
         }
 
+        if (!$sugarBean->ACLAccess('view')) {
+            throw new NotAllowed();
+        }
+
         // Handle Request
         /** @var SuiteBeanResource $resource */
         $resource = $this->containers->get('SuiteBeanResource');
@@ -623,6 +629,10 @@ class ModuleController extends ApiController
             throw $exception;
         }
 
+        if (!$sugarBean->ACLAccess('save')) {
+            throw new NotAllowed();
+        }
+
         /** @var Resource $resource */
         $resource = $this->containers->get('Resource');
         /** @var SuiteBeanResource $sugarBeanResource */
@@ -693,6 +703,10 @@ class ModuleController extends ApiController
             $exception = new NotFound(self::MISSING_ID);
             $exception->setSource('');
             throw $exception;
+        }
+
+        if (!$sugarBean->ACLAccess('delete')) {
+            throw new NotAllowed();
         }
 
         // Handle Request
@@ -1016,6 +1030,10 @@ class ModuleController extends ApiController
             );
         }
 
+        if (!$sugarBean->ACLAccess('view')) {
+            throw new NotAllowed('[Record]');
+        }
+
         if ($sugarBean->load_relationship($args['link']) === false) {
             throw new NotFound(
                 '[ModuleController] [Relationship does not exist] ' . $args['link'],
@@ -1151,6 +1169,10 @@ class ModuleController extends ApiController
                 '[ModuleController] [Relationship does not exist] ' . $args['link'],
                 ExceptionCode::API_RELATIONSHIP_NOT_FOUND
             );
+        }
+
+        if (!$sugarBean->ACLAccess('save')) {
+            throw new NotAllowed('[Record]');
         }
 
         /** @var \Link2 $sugarBeanRelationship */
@@ -1311,6 +1333,10 @@ class ModuleController extends ApiController
             );
         }
 
+        if (!$sugarBean->ACLAccess('save')) {
+            throw new NotAllowed('[Record]');
+        }
+
         /** @var \Link2 $sugarBeanRelationship */
         $sugarBeanRelationship =$sugarBean->{$args['link']};
 
@@ -1447,6 +1473,10 @@ class ModuleController extends ApiController
                 '[ModuleController] [Relationship does not exist] ' . $args['link'],
                 ExceptionCode::API_RELATIONSHIP_NOT_FOUND
             );
+        }
+
+        if (!$sugarBean->ACLAccess('delete')) {
+            throw new NotAllowed('[Record]');
         }
 
         /** @var \Link2 $sugarBeanRelationship */
