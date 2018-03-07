@@ -47,6 +47,8 @@ script:
   - ./vendor/bin/codecept run -f unit --steps -vvv --debug
   # Install OAuth2 demo data
   - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
+  # Show stack trace for functional tests
+  - echo "\$sugar_config['show_log_trace']=true;" >> config_override.php
   # Run API functional tests
   - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run -f api --steps -vvv --debug; fi
   # Break travis build when an SQL Query failed
