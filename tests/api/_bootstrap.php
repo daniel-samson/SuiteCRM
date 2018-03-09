@@ -11,3 +11,4 @@ $GLOBALS['app_list_strings'] = return_app_list_strings_language($GLOBALS['curren
 
 /* VERY BAD :-( - but for now at least tests are running */
 $GLOBALS['sugar_config']['resource_management']['default_limit'] = 999999;
+error_reporting(0);
