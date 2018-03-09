@@ -44,17 +44,17 @@ before_script:
 script:
   - \[ -f "config_si.php" \] || cp tests/travis_config_si.php config_si.php
   - php tests/testinstall.php
-  - ./vendor/bin/codecept run -f unit --steps -vvv --debug
+  - ./vendor/bin/codecept run unit --steps -vvv --debug
   # Install OAuth2 demo data
   - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
   # Show stack trace for functional tests
-  - echo "\$sugar_config['show_log_trace']=true;" >> config_override.php
+  # - echo "\$sugar_config['show_log_trace']=true;" >> config_override.php
   # set the log level to error
   - echo "\$sugar_config['logger']['level']='error';" >> config_override.php
   # Run API functional tests
-  - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run -f api --steps -vvv --debug; fi
+  - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else ./vendor/bin/codecept run api --steps; fi
   # Break travis build when an SQL Query failed
-  - if grep -R "Query Failed" suitecrm.log; then echo exit 1; fi
+  # - if grep -R "Query Failed" suitecrm.log; then echo exit 1; fi
 after_script:
   - cat suitecrm.log
   - cat .htaccess
