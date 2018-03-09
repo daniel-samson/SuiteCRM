@@ -1501,38 +1501,6 @@ class ModulesCest
                                         )
                                     )
                                 )
-                            ),
-                            array(
-                                'id' => 'seed_max_id',
-                                'type' => 'Users',
-                                'meta' => array(
-                                    'middle_table' => array(
-                                        'data' => array(
-                                            'id' => '',
-                                            'type' => 'Link',
-                                            'attributes' => array(
-                                                'user_id' => 'seed_max_id',
-                                                'accept_status' => 'none'
-                                            )
-                                        )
-                                    )
-                                )
-                            ),
-                            array(
-                                'id' => 'seed_chris_id',
-                                'type' => 'Users',
-                                'meta' => array(
-                                    'middle_table' => array(
-                                        'data' => array(
-                                            'id' => '',
-                                            'type' => 'Link',
-                                            'attributes' => array(
-                                                'user_id' => 'seed_chris_id',
-                                                'accept_status' => 'none'
-                                            )
-                                        )
-                                    )
-                                )
                             )
                         )
                     )
