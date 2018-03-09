@@ -1622,71 +1622,71 @@ class ModulesCest
 //                    )
 //                )
 //            )
-        );
+//        );
 
-        $I->sendPOST($url, json_encode($payloadUpdateChrisAccept));
-        $I->seeResponseIsJson();
-        $responseChrisAccept = json_decode($I->grabResponse(), true);
-        $I->seeResponseCodeIs(200);
-
-        $I->comment('Verify that user accept_status has been update');
-        $I->assertArrayHasKey('0', $responseChrisAccept['data']);
-        $I->assertNotEmpty($responseChrisAccept['data'][0]);
-        $I->assertArrayHasKey('id', $responseChrisAccept['data'][0]);
-        $I->assertEquals('seed_chris_id', $responseChrisAccept['data'][0]['id']);
-        $I->assertArrayHasKey('type', $responseChrisAccept['data'][0]);
-        $I->assertEquals('Users', $responseChrisAccept['data'][0]['type']);
-        $I->assertArrayHasKey('meta', $responseChrisAccept['data'][0]);
-        $I->assertArrayHasKey('middle_table', $responseChrisAccept['data'][0]['meta']);
-        $I->assertArrayHasKey('data', $responseChrisAccept['data'][0]['meta']['middle_table']);
-        $I->assertArrayHasKey('attributes', $responseChrisAccept['data'][0]['meta']['middle_table']['data']);
-        $I->assertArrayHasKey('accept_status', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']);
-        $I->assertEquals('accept', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']['accept_status']);
-        $I->assertArrayHasKey('user_id', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']);
-        $I->assertEquals('seed_chris_id', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']['user_id']);
-
-
-        $I->comment('Update a chris accept_status and remove other relationships using PATCH');
-        $url = $I->getInstanceURL() . self::$MEETINGS_RESOURCE . '/' .
-            self::$MEETINGS_RECORD_ID . '/relationships/users';
-        $payloadUpdateChrisDecline = array(
-            'data' =>  array(
-                'id' => 'seed_chris_id',
-                'type' => 'Users',
-                'meta' => array(
-                    'middle_table' => array(
-                        'data' => array(
-                            'id' => '',
-                            'type' => 'Link',
-                            'attributes' => array(
-                                'user_id' => 'seed_chris_id',
-                                'accept_status' => 'accept'
-                            )
-                        )
-                    )
-                )
-            )
-        );
-
-        $I->sendPATCH($url, json_encode($payloadUpdateChrisDecline));
-        $I->seeResponseIsJson();
-        $responseChrisDecline = json_decode($I->grabResponse(), true);
-        $I->seeResponseCodeIs(200);
-
-        $I->comment('Verify that user accept_status has been update');
-        $I->assertArrayHasKey('0', $responseChrisDecline['data']);
-        $I->assertNotEmpty($responseChrisDecline['data'][0]);
-        $I->assertArrayHasKey('id', $responseChrisDecline['data'][0]);
-        $I->assertEquals('seed_chris_id', $responseChrisDecline['data'][0]['id']);
-        $I->assertArrayHasKey('type', $responseChrisDecline['data'][0]);
-        $I->assertEquals('Users', $responseChrisDecline['data'][0]['type']);
-        $I->assertArrayHasKey('meta', $responseChrisDecline['data'][0]);
-        $I->assertArrayHasKey('middle_table', $responseChrisDecline['data'][0]['meta']);
-        $I->assertArrayHasKey('data', $responseChrisDecline['data'][0]['meta']['middle_table']);
-        $I->assertArrayHasKey('attributes', $responseChrisDecline['data'][0]['meta']['middle_table']['data']);
-        $I->assertArrayHasKey('accept_status', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']);
-        $I->assertEquals('accept', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']['accept_status']);
-        $I->assertArrayHasKey('user_id', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']);
-        $I->assertEquals('seed_chris_id', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']['user_id']);
+//        $I->sendPOST($url, json_encode($payloadUpdateChrisAccept));
+//        $I->seeResponseIsJson();
+//        $responseChrisAccept = json_decode($I->grabResponse(), true);
+//        $I->seeResponseCodeIs(200);
+//
+//        $I->comment('Verify that user accept_status has been update');
+//        $I->assertArrayHasKey('0', $responseChrisAccept['data']);
+//        $I->assertNotEmpty($responseChrisAccept['data'][0]);
+//        $I->assertArrayHasKey('id', $responseChrisAccept['data'][0]);
+//        $I->assertEquals('seed_chris_id', $responseChrisAccept['data'][0]['id']);
+//        $I->assertArrayHasKey('type', $responseChrisAccept['data'][0]);
+//        $I->assertEquals('Users', $responseChrisAccept['data'][0]['type']);
+//        $I->assertArrayHasKey('meta', $responseChrisAccept['data'][0]);
+//        $I->assertArrayHasKey('middle_table', $responseChrisAccept['data'][0]['meta']);
+//        $I->assertArrayHasKey('data', $responseChrisAccept['data'][0]['meta']['middle_table']);
+//        $I->assertArrayHasKey('attributes', $responseChrisAccept['data'][0]['meta']['middle_table']['data']);
+//        $I->assertArrayHasKey('accept_status', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']);
+//        $I->assertEquals('accept', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']['accept_status']);
+//        $I->assertArrayHasKey('user_id', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']);
+//        $I->assertEquals('seed_chris_id', $responseChrisAccept['data'][0]['meta']['middle_table']['data']['attributes']['user_id']);
+//
+//
+//        $I->comment('Update a chris accept_status and remove other relationships using PATCH');
+//        $url = $I->getInstanceURL() . self::$MEETINGS_RESOURCE . '/' .
+//            self::$MEETINGS_RECORD_ID . '/relationships/users';
+//        $payloadUpdateChrisDecline = array(
+//            'data' =>  array(
+//                'id' => 'seed_chris_id',
+//                'type' => 'Users',
+//                'meta' => array(
+//                    'middle_table' => array(
+//                        'data' => array(
+//                            'id' => '',
+//                            'type' => 'Link',
+//                            'attributes' => array(
+//                                'user_id' => 'seed_chris_id',
+//                                'accept_status' => 'accept'
+//                            )
+//                        )
+//                    )
+//                )
+//            )
+//        );
+//
+//        $I->sendPATCH($url, json_encode($payloadUpdateChrisDecline));
+//        $I->seeResponseIsJson();
+//        $responseChrisDecline = json_decode($I->grabResponse(), true);
+//        $I->seeResponseCodeIs(200);
+//
+//        $I->comment('Verify that user accept_status has been update');
+//        $I->assertArrayHasKey('0', $responseChrisDecline['data']);
+//        $I->assertNotEmpty($responseChrisDecline['data'][0]);
+//        $I->assertArrayHasKey('id', $responseChrisDecline['data'][0]);
+//        $I->assertEquals('seed_chris_id', $responseChrisDecline['data'][0]['id']);
+//        $I->assertArrayHasKey('type', $responseChrisDecline['data'][0]);
+//        $I->assertEquals('Users', $responseChrisDecline['data'][0]['type']);
+//        $I->assertArrayHasKey('meta', $responseChrisDecline['data'][0]);
+//        $I->assertArrayHasKey('middle_table', $responseChrisDecline['data'][0]['meta']);
+//        $I->assertArrayHasKey('data', $responseChrisDecline['data'][0]['meta']['middle_table']);
+//        $I->assertArrayHasKey('attributes', $responseChrisDecline['data'][0]['meta']['middle_table']['data']);
+//        $I->assertArrayHasKey('accept_status', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']);
+//        $I->assertEquals('accept', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']['accept_status']);
+//        $I->assertArrayHasKey('user_id', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']);
+//        $I->assertEquals('seed_chris_id', $responseChrisDecline['data'][0]['meta']['middle_table']['data']['attributes']['user_id']);
     }
 }
