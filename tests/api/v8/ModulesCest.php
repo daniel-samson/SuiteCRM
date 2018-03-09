@@ -57,6 +57,7 @@ class ModulesCest
      */
     public function TestScenarioListModules(apiTester $I)
     {
+
         $I->comment('Test list modules');
         $I->sendJsonApiContentNegotiation();
         $I->loginAsAdmin();
