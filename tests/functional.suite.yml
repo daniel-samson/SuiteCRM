@@ -8,4 +8,7 @@ class_name: FunctionalTester
 modules:
     enabled:
         # add framework module here
+        - Asserts
         - \Helper\Functional
+        - PhpBrowser:
+          url: 'http://localhost'

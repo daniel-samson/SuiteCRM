@@ -30,7 +30,8 @@
     "codeception/codeception": "^2.0",
     "fzaninotto/Faker": "^1.6",
     "jeroendesloovere/vcard": "v1.5",
-    "browserstack/browserstack-local": "dev-master"
+    "browserstack/browserstack-local": "dev-master",
+    "guzzle/guzzle": "~3.7"
   },
   "scripts": {},
   "prefer-stable": true,
