@@ -101,3 +101,7 @@ cache/
 custom/**/
 .sass-cache/
 .php_cs.cache
+
+# Codecept scripts
+codecept.sh
+codecept.bat
