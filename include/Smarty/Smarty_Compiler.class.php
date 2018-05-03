@@ -21,7 +21,7 @@
  * @link http://smarty.php.net/
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
- * @version 2.6.29
+ * @version 2.6.25-dev
  * @copyright 2001-2005 New Digital Group, Inc.
  * @package Smarty
  */
@@ -261,11 +261,8 @@ class Smarty_Compiler extends Smarty {
         $this->_folded_blocks = $match;
 
         /* replace special blocks by "{php}" */
-        $source_content = preg_replace_callback(
-            $search,
-            array($this,'_preg_callback'),
-            $source_content
-        );
+        $source_content = preg_replace_callback($search, array($this,'_preg_callback')
+                                       , $source_content);
 
         /* Gather all template tags. */
         preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $source_content, $_match);
@@ -592,16 +589,7 @@ class Smarty_Compiler extends Smarty {
     }
 
 
-    function _preg_callback($matches)
-    {
-            return  $this->_quote_replace($this->left_delimiter)
-           . 'php'
-           . str_repeat("\n", substr_count($matches[1], "\n"))
-           . $this->_quote_replace($this->right_delimiter);;
-    }
-
-
-/**
+    /**
      * compile the custom compiler tag
      *
      * sets $output to the compiled custom compiler tag
@@ -761,7 +749,12 @@ class Smarty_Compiler extends Smarty {
         return true;
     }
 
-
+    function _preg_callback ($matches) {
+    return $this->_quote_replace($this->left_delimiter)
+           . 'php'
+           . str_repeat("\n", substr_count($matches[1], "\n"))
+           . $this->_quote_replace($this->right_delimiter);
+    }
     /**
      * compile custom function tag
      *
@@ -982,7 +975,6 @@ class Smarty_Compiler extends Smarty {
             $this->_syntax_error("missing 'file' attribute in include tag", E_USER_ERROR, __FILE__, __LINE__);
         }
 
-        $theme_template = 'false';
         foreach ($attrs as $arg_name => $arg_value) {
             if ($arg_name == 'file') {
                 $include_file = $arg_value;
@@ -990,17 +982,11 @@ class Smarty_Compiler extends Smarty {
             } else if ($arg_name == 'assign') {
                 $assign_var = $arg_value;
                 continue;
-            } else if ($arg_name == 'theme_template') {
-                $theme_template = $arg_value;
-                continue;
             }
             if (is_bool($arg_value))
                 $arg_value = $arg_value ? 'true' : 'false';
             $arg_list[] = "'$arg_name' => $arg_value";
         }
-
-        if ( $theme_template == 'true' )
-            $include_file = '"'.SugarThemeRegistry::current()->getTemplate(str_replace(array('"',"'"),'',$include_file)).'"';
 
         $output = '<?php ';
 
