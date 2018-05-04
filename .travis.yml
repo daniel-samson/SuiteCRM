@@ -80,6 +80,7 @@ script:
 after_script:
   - ./build/push_output.sh
   - cat suitecrm.log
+  - if [[ $(phpenv version-name) =~ ^5\.[0-9]$ ]]; then echo "skipping PHP 5.x Images"; else cat cache/themes/SuiteP/modules/Test_BasicTestModule/DetailView.tpl; fi
 
 branches:
   only:
