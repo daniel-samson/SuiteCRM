@@ -50,11 +50,14 @@ r22571 - 2007-05-08 16:35:35 -0700 (Tue, 08 May 2007) - clee -
  * 
  * @author Collin Lee {clee@sugarcrm.com}
  * @param array
- * @param Smarty
+ * @param Smarty $smarty
  */
 function smarty_function_sugar_include($params, &$smarty)
 {
     global $app_strings;
+
+    // report
+    $smarty->error_reporting = ~E_ALL & ~E_NOTICE & ~E_NOTICE & E_ERROR;
 
     if(isset($params['type']) && $params['type'] == 'php') {
 		if(!isset($params['file'])) {
