@@ -79,8 +79,7 @@ after_script:
   - cat suitecrm.log
   - sudo cat /var/log/apache2/error.log
   - echo $TRAVIS_COMMIT_RANGE
-
-#after_success:
+after_success:
   - ./vendor/bin/robo code:coverage
   - bash <(curl -s https://codecov.io/bash)
 branches:

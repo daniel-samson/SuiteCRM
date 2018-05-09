@@ -149,6 +149,7 @@ class CodeCoverageCommands extends \Robo\Tasks
 
         $this->taskCodecept()
             ->suite('unit')
+            ->silent()
             ->coverageXml()
             ->run();
 
@@ -157,7 +158,7 @@ class CodeCoverageCommands extends \Robo\Tasks
 
 
         $this->_copy(
-            $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_data/coverage.xml'),
+            $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_output/coverage.xml'),
             $projectPath . DIRECTORY_SEPARATOR . 'coverage.xml'
         );
     }
