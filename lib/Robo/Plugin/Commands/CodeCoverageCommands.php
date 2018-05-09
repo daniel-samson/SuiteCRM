@@ -51,6 +51,9 @@ class CodeCoverageCommands extends \Robo\Tasks
     use loadTasks;
     use RoboTrait;
 
+    /**
+     * @throws RuntimeException
+     */
     public function codeCoverage() {
         $this->say('Code Coverage');
 
@@ -76,22 +79,35 @@ class CodeCoverageCommands extends \Robo\Tasks
         $this->say('Code Coverage Completed');
     }
 
+    /**
+     * @return bool
+     */
     protected function isEnvironmentTravisCI()
     {
         return !empty(getenv('TRAVIS'));
     }
 
 
+    /**
+     * @return array|false|string
+     */
     protected function getCommitRangeForTravisCi()
     {
         return getenv('TRAVIS_COMMIT_RANGE');
     }
 
+    /**
+     * @return bool
+     */
     protected function isTravisPullRequest()
     {
         return !empty(getenv('TRAVIS_PULL_REQUEST')) && getenv('TRAVIS_PULL_REQUEST') != false;
     }
 
+    /**
+     * @param $gitRange
+     * @return array
+     */
     protected function gitFilesChanged($gitRange)
     {
         $command = 'git diff --name-only ' . $gitRange . ' --diff-filter=ACMRT';
@@ -99,6 +115,11 @@ class CodeCoverageCommands extends \Robo\Tasks
         return explode(PHP_EOL, $result->getMessage());
     }
 
+    /**
+     * @param $files
+     * @param $extension
+     * @return array
+     */
     protected function filterFilesByExtension($files, $extension)
     {
         $filesFiltered = array();
@@ -122,6 +143,9 @@ class CodeCoverageCommands extends \Robo\Tasks
         return $filesFiltered;
     }
 
+    /**
+     * @param $files
+     */
     protected function configureCodeCoverageFiles($files)
     {
         $config = $this->getCodeceptionYml();
@@ -130,6 +154,9 @@ class CodeCoverageCommands extends \Robo\Tasks
         $this->setCodeceptionYml($config);
     }
 
+    /**
+     *
+     */
     protected function generateEmptyCodeCoverageFile()
     {
         $paths = new Paths();
@@ -141,6 +168,9 @@ class CodeCoverageCommands extends \Robo\Tasks
         );
     }
 
+    /**
+     *
+     */
     protected function generateCodeCoverageFile()
     {
 
@@ -163,20 +193,40 @@ class CodeCoverageCommands extends \Robo\Tasks
         );
     }
 
+    /**
+     *
+     */
     protected function disableStateChecker()
     {
-        $sugar_config['state_checker']['test_state_check_mode']=0;
+        require 'config_override.php';
+        global $sugar_config;
+        $sugar_config['state_checker']['test_state_check_mode'] = 0;
+        write_array_to_file(
+            'sugar_config',
+            sugarArrayMerge(get_sugar_config_defaults(), $sugar_config),
+            'config_override.php'
+        );
     }
 
+    /**
+     * @return mixed
+     */
     protected function getCodeceptionYml()
     {
         return Yaml::parseFile($this->getCodeceptionYmlPath());
     }
+
+    /**
+     * @param $config
+     */
     protected function setCodeceptionYml($config)
     {
         file_put_contents($this->getCodeceptionYmlPath(), Yaml::dump($config));
     }
 
+    /**
+     * @return string
+     */
     protected function getCodeceptionYmlPath()
     {
         $paths = new Paths();
