@@ -11,17 +11,11 @@ class CodeCoverageCommandsTest extends SuiteCRM\StateCheckerUnitAbstract
         parent::_before();
     }
 
-
-
-    public function testIsEnvironmentTravisCI()
+    public function testGetCodeceptionYml()
     {
-
+        $reflection = new ReflectionClass(\SuiteCRM\Robo\Plugin\Commands\CodeCoverageCommands::class);
+        $method = $reflection->getMethod('getCodeceptionYml');
+        $method->setAccessible(true);
+        $this->assertNotEmpty($method->invoke($reflection));
     }
-
-    public function  testGetCommitRangeForTravisCi ()
-    {
-
-    }
-
-    public function testIsTravisPullRequest() {}
 }

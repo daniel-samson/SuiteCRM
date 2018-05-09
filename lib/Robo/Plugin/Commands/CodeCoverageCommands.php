@@ -165,7 +165,6 @@ class CodeCoverageCommands extends \Robo\Tasks
 
     protected function disableStateChecker()
     {
-
         $sugar_config['state_checker']['test_state_check_mode']=0;
     }
 
