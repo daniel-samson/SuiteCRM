@@ -81,6 +81,7 @@ after_script:
   - echo $TRAVIS_COMMIT_RANGE
 after_success:
   - ./vendor/bin/robo code:coverage
+  - cat codeception.yml
   - bash <(curl -s https://codecov.io/bash) -f coverage.xml
 branches:
   only:
