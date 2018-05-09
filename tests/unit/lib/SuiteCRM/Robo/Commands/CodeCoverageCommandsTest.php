@@ -1,5 +1,5 @@
 <?php
-class CodeCoverageCommandsTest extends SuiteCRM\StateCheckerUnitAbstract
+class CodeCoverageCommandsTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
@@ -16,6 +16,6 @@ class CodeCoverageCommandsTest extends SuiteCRM\StateCheckerUnitAbstract
         $reflection = new ReflectionClass(\SuiteCRM\Robo\Plugin\Commands\CodeCoverageCommands::class);
         $method = $reflection->getMethod('getCodeceptionYml');
         $method->setAccessible(true);
-        $this->assertNotEmpty($method->invoke($reflection));
+        $this->assertNotEmpty($method->invoke(new \SuiteCRM\Robo\Plugin\Commands\CodeCoverageCommands()));
     }
 }
