@@ -81,7 +81,7 @@ after_script:
   - echo $TRAVIS_COMMIT_RANGE
 after_success:
   - ./vendor/bin/robo code:coverage
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -f coverage.yml
 branches:
   only:
     - master
