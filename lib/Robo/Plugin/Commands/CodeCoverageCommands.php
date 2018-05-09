@@ -129,9 +129,9 @@ class CodeCoverageCommands extends \Robo\Tasks
 
         foreach ($files as $file)
         {
-            $path = $projectPath . DIRECTORY_SEPARATOR . $file;
-            if(file_exists($path)) {
-                $pathinfo = pathinfo($path);
+
+            if(file_exists($file)) {
+                $pathinfo = pathinfo($file);
                 if(!empty($pathinfo) && array_key_exists('extension', $pathinfo)) {
                     if ($pathinfo['extension'] === $extension) {
                         $filesFiltered[] = $file;
@@ -198,14 +198,14 @@ class CodeCoverageCommands extends \Robo\Tasks
      */
     protected function disableStateChecker()
     {
-        require 'config_override.php';
-        global $sugar_config;
-        $sugar_config['state_checker']['test_state_check_mode'] = 0;
-        write_array_to_file(
-            'sugar_config',
-            sugarArrayMerge(get_sugar_config_defaults(), $sugar_config),
-            'config_override.php'
-        );
+//        require 'config_override.php';
+//        global $sugar_config;
+//        $sugar_config['state_checker']['test_state_check_mode'] = 0;
+//        write_array_to_file(
+//            'sugar_config',
+//            $sugar_config,
+//            'config_override.php'
+//        );
     }
 
     /**
