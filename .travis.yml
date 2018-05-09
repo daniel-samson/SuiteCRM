@@ -57,7 +57,7 @@ before_script:
 script:
   # Run the silent installer or the wizard installer ?
   - echo "using install wizard"
-  - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d --coverage-xml=coverage.xml
+  - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
   - ./build/push_output.sh
 
   # Run the unit tests
@@ -81,8 +81,8 @@ after_script:
   - echo $TRAVIS_COMMIT_RANGE
 
 #after_success:
-#  - ./vendor/bin/codecept run unit --coverage-xml=./coverage.xml
-#  - bash <(curl -s https://codecov.io/bash)
+  - ./vendor/bin/robo code:coverage
+  - bash <(curl -s https://codecov.io/bash)
 branches:
   only:
     - master
