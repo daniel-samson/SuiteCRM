@@ -10,39 +10,13 @@ settings:
     colors: true
     memory_limit: 16000M
 extensions:
-    enabled:
-        - Codeception\Extension\RunFailed
+    enabled: [Codeception\Extension\RunFailed]
 coverage:
     enabled: true
     remote: false
     low_limit: 50
     high_limit: 90
-    include:
-        - ModuleInstall/*.php
-        - data/*.php
-        - include/*.php
-        - install/*.php
-        - jssource/*.php
-        - lib/*.php
-        - metadata/*.php
-        - modules/*.php
-        - service/*.php
-        - soap/*.php
-        - themes/*.php
-    exclude:
-        - include/timezone/*
-        - include/SuiteGraphs/*
-        - include/social/*
-        - include/Smarty/*
-        - include/reCaptcha/*
-        - include/phpmailer/*
-        - include/Pear/*
-        - include/pclzip/*
-        - include/nusoap/*
-        - include/HTTP_WebDAV_Server/*
-        - include/HTMLPurifier/*
+    include: [ModuleInstall/ModuleInstaller.php, XTemplate/xtpl.php, custom/modules/unified_search_modules_display.php, data/SugarBean.php, include/ListView/ListView.php, include/Smarty/Config_File.class.php, include/Smarty/Smarty_Compiler.class.php, include/Smarty/plugins/modifier.escape.php, include/SugarLogger/SugarLogger.php, include/SugarXHprof/xhprof_lib/utils/xhprof_runs.php, include/Sugar_Smarty.php, include/tcpdf/tcpdf.php, include/utils.php, install/install_utils.php, install/performSetup.php, lib/API/core/app.php, modules/AOS_PDF_Templates/PDF_Lib/mpdf.php, modules/Administration/Administration.php, modules/Administration/Common.php, modules/Home/UnifiedSearchAdvanced.php, modules/Import/Importer.php, modules/Import/views/ImportView.php, modules/ModuleBuilder/parsers/relationships/AbstractRelationships.php, modules/ModuleBuilder/parsers/views/AbstractMetaDataImplementation.php, modules/ModuleBuilder/parsers/views/GridLayoutMetaDataParser.php, modules/ModuleBuilder/parsers/views/History.php, modules/Studio/parsers/StudioParser.php, modules/SugarFeed/Dashlets/SugarFeedDashlet/SugarFeedDashlet.php, modules/Users/Save.php, tests/SuiteCRM/Test/Driver/WebDriver.php, tests/_support/AcceptanceTester.php, tests/_support/InstallTester.php, tests/_support/Step/Acceptance/EditView.php, tests/_support/Step/Acceptance/ModuleBuilder.php, tests/acceptance/Core/BasicModuleCest.php, tests/acceptance/Core/CompanyModuleCest.php, tests/acceptance/Core/FileModuleCest.php, tests/acceptance/Core/IssueModuleCest.php, tests/acceptance/Core/ModuleBuilderFieldsCest.php, tests/acceptance/Core/PersonModuleCest.php, tests/acceptance/Core/SaleModuleCest.php, tests/install/UserWizardCest.php, tests/unit/data/SugarBeanTest.php]
+    exclude: {  }
 params:
     - env
-
-
-

@@ -130,7 +130,7 @@ class CodeCoverageCommands extends \Robo\Tasks
         foreach ($files as $file)
         {
 
-            if(file_exists($file)) {
+            if(file_exists($projectPath.DIRECTORY_SEPARATOR.$file)) {
                 $pathinfo = pathinfo($file);
                 if(!empty($pathinfo) && array_key_exists('extension', $pathinfo)) {
                     if ($pathinfo['extension'] === $extension) {
@@ -176,12 +176,15 @@ class CodeCoverageCommands extends \Robo\Tasks
 
         $paths = new Paths();
         $os = new OperatingSystem();
-
-        $this->taskCodecept()
-            ->suite('unit')
-            ->silent()
-            ->coverageXml()
-            ->run();
+        $paths = new Paths();
+        $os = new OperatingSystem();
+        $projectPath = $os->toOsPath($paths->getProjectPath());
+        $this->_exec($projectPath.DIRECTORY_SEPARATOR.$os->toOsPath('vendor/bin/codecept'). ' run unit --coverage-xml');
+//        $this->taskCodecept()
+//            ->suite('unit')
+//            ->silent()
+//            ->coverageXml()
+//            ->run();
 
 
         $projectPath = $os->toOsPath($paths->getProjectPath());
