@@ -41,9 +41,22 @@ class CodeCoverageCommandsTest extends \Codeception\Test\Unit
         $this->markTestIncomplete('Test Not implemented');
     }
 
-    protected function testFilterFilesByExtension()
+    public function testFilterFilesByExtension()
     {
-        $this->markTestIncomplete('Test Not implemented');
+        $reflection = new ReflectionClass(CodeCoverageCommands::class);
+        $method = $reflection->getMethod('filterFilesByExtension');
+        $method->setAccessible(true);
+        $expected = array('index.php');
+        $actual = $method->invoke(
+            self::$testClass,
+            array(
+                'index.php',
+                'codeception.yml',
+                ''
+            ),
+            'php'
+        );
+        $this->assertSame($actual, $expected);
     }
 
     protected function testConfigureCodeCoverageFiles()
