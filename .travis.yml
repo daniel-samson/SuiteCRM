@@ -5,9 +5,14 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - nightly
 matrix:
   fast_finish: true
-
+  include:
+      - php: 7.0
+        env: codecoverage=true
+  allow_failures:
+    - php: nightly
 sudo: required
 dist: trusty
 services:
@@ -59,26 +64,27 @@ script:
   - echo "using install wizard"
   - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
   - ./build/push_output.sh
-#
-#  # Run the unit tests
-#  - ./vendor/bin/codecept run unit --steps
-#  # Install OAuth2 demo data
-#  - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
-#  # Install demo user data
-#  - mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"
-#  # set the log level to error
-#  - echo "\$sugar_config['logger']['level']='error';" >> config_override.php
-#  # Run API functional tests
-#  - ./vendor/bin/codecept run api --steps
-#  # RUN Basic Acceptance test
-#  - sudo chmod -R 777 .
-#  - ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
+
+  # Run the unit tests
+  - ./vendor/bin/codecept run unit --steps
+  # Install OAuth2 demo data
+  - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
+  # Install demo user data
+  - mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"
+  # set the log level to error
+  - echo "\$sugar_config['logger']['level']='error';" >> config_override.php
+  # Run API functional tests
+  - ./vendor/bin/codecept run api --steps
+  # RUN Basic Acceptance test
+  - sudo chmod -R 777 .
+  - ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
 
 after_script:
   - ./build/push_output.sh
   - cat suitecrm.log
   - sudo cat /var/log/apache2/error.log
   - echo $TRAVIS_COMMIT_RANGE
+
 after_success:
   - ./vendor/bin/robo -vvv code:coverage
   - cat codeception.yml

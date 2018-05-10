@@ -125,7 +125,7 @@ class CodeCoverageCommands extends \Robo\Tasks
         foreach ($files as $file)
         {
             if(file_exists($file)) {
-                if (pathinfo($file, PATHINFO_EXTENSION) === $extension) {
+                if (pathinfo($file, PATHINFO_EXTENSION) == $extension) {
                     $filesFiltered[] = $file;
                     $this->say('found ' . $file);
                 };
