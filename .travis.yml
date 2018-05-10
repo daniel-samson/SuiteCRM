@@ -10,10 +10,10 @@ matrix:
   fast_finish: true
 jobs:
   include:
-      - stage: deploy
+      - stage: codecoverage
         php: 7.0
         env: codecoverage=true
-        script: ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
+        script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
 
 sudo: required
 dist: trusty
