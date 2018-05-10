@@ -67,14 +67,9 @@ class CodeCoverageCommands extends \Robo\Tasks
         $filesChanged = $this->gitFilesChanged($range);
         $phpFiles = $this->filterFilesByExtension($filesChanged, 'php');
 
-        if(empty($phpFiles)) {
-            $this->generateEmptyCodeCoverageFile();
-        } else {
-            $this->disableStateChecker();
-            $this->configureCodeCoverageFiles($phpFiles);
-            $this->generateCodeCoverageFile();
-        }
-
+        $this->disableStateChecker();
+        $this->configureCodeCoverageFiles($phpFiles);
+        $this->generateCodeCoverageFile();
 
         $this->say('Code Coverage Completed');
     }
