@@ -1,11 +1,4 @@
 language: php
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - nightly
 matrix:
   fast_finish: true
   include:
@@ -13,6 +6,13 @@ matrix:
         env: CODE_COVERAGE=true INSTANCE_URL=http://localhost/ DATABASE_DRIVER=MYSQL DATABASE_NAME=automated_tests DATABASE_HOST=localhost DATABASE_USER=automated_tests DATABASE_PASSWORD=automated_tests INSTANCE_ADMIN_USER=admin INSTANCE_ADMIN_PASSWORD=admin1
   allow_failures:
     - php: nightly
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+  - nightly
 sudo: required
 dist: trusty
 services:
@@ -67,7 +67,7 @@ script:
 
   # Run the test suite
   -  if [[ -n $CODE_COVERAGE ]]; then \
-    ;; \
+    echo "Code Coverage Settings Detected"; \
     else \
     ./vendor/bin/codecept run unit --steps; \
       mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"; \
