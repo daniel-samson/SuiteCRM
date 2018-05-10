@@ -1,18 +1,20 @@
 language: php
-matrix:
-  fast_finish: true
-  include:
-      - php: 7.0
-        env: CODE_COVERAGE=true INSTANCE_URL=http://localhost/ DATABASE_DRIVER=MYSQL DATABASE_NAME=automated_tests DATABASE_HOST=localhost DATABASE_USER=automated_tests DATABASE_PASSWORD=automated_tests INSTANCE_ADMIN_USER=admin INSTANCE_ADMIN_PASSWORD=admin1
-  allow_failures:
-    - php: nightly
 php:
   - 5.5
   - 5.6
   - 7.0
   - 7.1
   - 7.2
-  - nightly
+
+matrix:
+  fast_finish: true
+jobs:
+  include:
+      - stage: deploy
+        php: 7.0
+        env: codecoverage=true
+        script: ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
+
 sudo: required
 dist: trusty
 services:
@@ -65,31 +67,25 @@ script:
   - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
   - ./build/push_output.sh
 
-  # Run the test suite
-  -  if [[ -n $CODE_COVERAGE ]]; then \
-    echo "Code Coverage Settings Detected"; \
-    else \
-    ./vendor/bin/codecept run unit --steps; \
-      mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"; \
-      mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"; \
-      echo "\$sugar_config['logger']['level']='error';" >> config_override.php; \
-      ./vendor/bin/codecept run api --steps; \
-      sudo chmod -R 777 .; \
-      ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d; \
-      ./build/push_output.sh; \
-    fi
+  # Run the unit tests
+  - ./vendor/bin/codecept run unit --steps
+  # Install OAuth2 demo data
+  - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
+  # Install demo user data
+  - mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"
+  # set the log level to error
+  - echo "\$sugar_config['logger']['level']='error';" >> config_override.php
+  # Run API functional tests
+  - ./vendor/bin/codecept run api --steps
+  # RUN Basic Acceptance test
+  - sudo chmod -R 777 .
+  - ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
 
 after_script:
+  - ./build/push_output.sh
   - cat suitecrm.log
   - sudo cat /var/log/apache2/error.log
   - echo $TRAVIS_COMMIT_RANGE
-
-after_success:
-  -  if [[ -n $CODE_COVERAGE ]]; then \
-    ./vendor/bin/robo -vvv code:coverage; \
-    cat codeception.yml; \
-    bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml; \
-    fi
 
 branches:
   only:
