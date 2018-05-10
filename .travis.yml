@@ -1,20 +1,18 @@
 language: php
-#php:
-#  - 5.5
-#  - 5.6
-#  - 7.0
-#  - 7.1
-#  - 7.2
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
 
 matrix:
   fast_finish: true
 jobs:
   include:
-      - stage: testing
-        php: 5.5
         script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./build/push_output.sh; ./vendor/bin/codecept run unit --steps;
         script: mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"; mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"; echo "\$sugar_config['logger']['level']='error';" >> config_override.php; ./vendor/bin/codecept run api --steps
-        script: sudo chmod -R 777 .; ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
+        script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; sudo chmod -R 777 .; ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
       - stage: codecoverage
         php: 7.0
         script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
