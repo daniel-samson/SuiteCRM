@@ -19,12 +19,6 @@ parsers:
       loop: yes
       method: no
       macro: no
-
-ignore:
-  - "tests/_data/*"
-  - "tests/_output/*"
-  - "modules/AOS_PDF_Templates/PDF_Lib/utils/*"
-
 comment:
   layout: "header, diff"
   behavior: default

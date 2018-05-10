@@ -164,7 +164,7 @@ class CodeCoverageCommands extends \Robo\Tasks
         $projectPath = $os->toOsPath($paths->getProjectPath());
         $this->_copy(
             $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_data/empty-coverage.xml'),
-            $projectPath . DIRECTORY_SEPARATOR . 'coverage.xml'
+            $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_output/coverage.xml')
         );
     }
 
@@ -173,26 +173,14 @@ class CodeCoverageCommands extends \Robo\Tasks
      */
     protected function generateCodeCoverageFile()
     {
-
-        $paths = new Paths();
-        $os = new OperatingSystem();
         $paths = new Paths();
         $os = new OperatingSystem();
         $projectPath = $os->toOsPath($paths->getProjectPath());
-        $this->_exec($projectPath.DIRECTORY_SEPARATOR.$os->toOsPath('vendor/bin/codecept'). ' run unit --coverage-xml');
-//        $this->taskCodecept()
-//            ->suite('unit')
-//            ->silent()
-//            ->coverageXml()
-//            ->run();
-
-
-        $projectPath = $os->toOsPath($paths->getProjectPath());
-
-
-        $this->_copy(
-            $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_output/coverage.xml'),
-            $projectPath . DIRECTORY_SEPARATOR . 'coverage.xml'
+        $this->_exec(
+            $projectPath
+            . DIRECTORY_SEPARATOR
+            . $os->toOsPath('vendor/bin/codecept')
+            . ' run unit --coverage-xml'
         );
     }
 
