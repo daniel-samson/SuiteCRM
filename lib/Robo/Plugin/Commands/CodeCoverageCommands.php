@@ -159,13 +159,7 @@ class CodeCoverageCommands extends \Robo\Tasks
      */
     protected function generateEmptyCodeCoverageFile()
     {
-        $paths = new Paths();
-        $os = new OperatingSystem();
-        $projectPath = $os->toOsPath($paths->getProjectPath());
-        $this->_copy(
-            $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_data/empty-coverage.xml'),
-            $projectPath . DIRECTORY_SEPARATOR . $os->toOsPath('tests/_output/coverage.xml')
-        );
+      $this->say('Skipping Coverage');
     }
 
     /**

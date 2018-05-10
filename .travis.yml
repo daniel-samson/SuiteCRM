@@ -80,7 +80,7 @@ after_script:
   - sudo cat /var/log/apache2/error.log
   - echo $TRAVIS_COMMIT_RANGE
 after_success:
-  - ./vendor/bin/robo code:coverage
+  - ./vendor/bin/robo -vvv code:coverage
   - cat codeception.yml
   - bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
 branches:
