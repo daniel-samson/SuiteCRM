@@ -64,11 +64,12 @@ class CodeCoverageCommands extends \Robo\Tasks
            throw new RuntimeException('unable to detect continuous integration environment');
         }
 
-        $filesChanged = $this->gitFilesChanged($range);
-        $phpFiles = $this->filterFilesByExtension($filesChanged, 'php');
+
 
         $this->disableStateChecker();
-        $this->configureCodeCoverageFiles($phpFiles);
+//        $filesChanged = $this->gitFilesChanged($range);
+//        $phpFiles = $this->filterFilesByExtension($filesChanged, 'php');
+//        $this->configureCodeCoverageFiles($phpFiles);
         $this->generateCodeCoverageFile();
 
         $this->say('Code Coverage Completed');
