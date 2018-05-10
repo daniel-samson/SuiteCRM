@@ -201,14 +201,14 @@ class CodeCoverageCommands extends \Robo\Tasks
      */
     protected function disableStateChecker()
     {
-//        require 'config_override.php';
-//        global $sugar_config;
-//        $sugar_config['state_checker']['test_state_check_mode'] = 0;
-//        write_array_to_file(
-//            'sugar_config',
-//            $sugar_config,
-//            'config_override.php'
-//        );
+        require_once 'include/utils/file_utils.php';
+        require 'config_override.php';
+        $sugar_config['state_checker']['test_state_check_mode'] = 0;
+        write_array_to_file(
+            'sugar_config',
+            $sugar_config,
+            'config_override.php'
+        );
     }
 
     /**
