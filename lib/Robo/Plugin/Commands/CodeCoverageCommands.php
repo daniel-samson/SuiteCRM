@@ -52,6 +52,7 @@ class CodeCoverageCommands extends \Robo\Tasks
     use RoboTrait;
 
     /**
+     * Runs code coverage for travis ci
      * @throws RuntimeException
      */
     public function codeCoverage() {
@@ -64,11 +65,12 @@ class CodeCoverageCommands extends \Robo\Tasks
            throw new RuntimeException('unable to detect continuous integration environment');
         }
 
-        $filesChanged = $this->gitFilesChanged($range);
-        $phpFiles = $this->filterFilesByExtension($filesChanged, 'php');
+
 
         $this->disableStateChecker();
-        $this->configureCodeCoverageFiles($phpFiles);
+//        $filesChanged = $this->gitFilesChanged($range);
+//        $phpFiles = $this->filterFilesByExtension($filesChanged, 'php');
+//        $this->configureCodeCoverageFiles($phpFiles);
         $this->generateCodeCoverageFile();
 
         $this->say('Code Coverage Completed');
@@ -124,8 +126,8 @@ class CodeCoverageCommands extends \Robo\Tasks
 
         foreach ($files as $file)
         {
-            if(file_exists($projectPath . DIRECTORY_SEPARATOR. $file)) {
-                if (pathinfo($file, PATHINFO_EXTENSION) === $extension) {
+            if(file_exists($file)) {
+                if (pathinfo($file, PATHINFO_EXTENSION) == $extension) {
                     $filesFiltered[] = $file;
                     $this->say('found ' . $file);
                 };
