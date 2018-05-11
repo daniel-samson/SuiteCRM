@@ -116,6 +116,7 @@ class TestEnvironmentCommands extends \Robo\Tasks
     }
 
     /**
+     * Configures local environment to look like travis
      * @param array $opts
      */
     public function fakeTravis(

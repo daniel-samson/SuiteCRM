@@ -52,6 +52,7 @@ class CodeCoverageCommands extends \Robo\Tasks
     use RoboTrait;
 
     /**
+     * Runs code coverage for travis ci
      * @throws RuntimeException
      */
     public function codeCoverage() {
