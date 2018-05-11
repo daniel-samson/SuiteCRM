@@ -12,7 +12,6 @@ jobs:
   include:
       - stage: codecoverage
         php: 7.0
-        env: codecoverage=true
         script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
 
 sudo: required
@@ -21,6 +20,9 @@ services:
   - mysql
 addons:
   chrome: stable
+cache:
+  directories:
+        - $HOME/.composer/cache
 
 env:
   - INSTANCE_URL=http://localhost/ DATABASE_DRIVER=MYSQL DATABASE_NAME=automated_tests DATABASE_HOST=localhost DATABASE_USER=automated_tests DATABASE_PASSWORD=automated_tests INSTANCE_ADMIN_USER=admin INSTANCE_ADMIN_PASSWORD=admin1
