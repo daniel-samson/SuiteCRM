@@ -284,13 +284,14 @@ class AOR_ReportsCest
             $webDriverHelper->getInstanceURL()
         );
 
+        $this->fakeData->seed($this->fakeDataSeed);
         // Navigate to Accounts
         $I->loginAsAdmin();
         $navigationBar->clickAllMenuItem('Accounts');
         $listView->waitForListViewVisible();
 
         // Create Account
-        $reports->createAccount('Test_Account_Text');
+        $reports->createAccount($this->fakeData->company);
 
         // Navigate to reports list-view
         $reports->gotoReports();
@@ -301,14 +302,14 @@ class AOR_ReportsCest
         $sidebar->clickSideBarAction('Create');
 
         // Create a report
-        $reports->createReport('Report_Test_Text', 'Accounts');
+        $reports->createReport($this->fakeData->randomAscii, 'Accounts');
 
         // Add field
         $reports->addField('Name', 'Accounts');
 
         // Add condition
         $reports->addCondition('Name', 'Accounts');
-        $editView->fillField('#aor_conditions_value[0]', 'Test_Account_Text');
+        $editView->fillField('#aor_conditions_value[0]', $this->fakeData->randomAscii);
         $editView->clickSaveButton();
         $detailView->waitForDetailViewVisible();
 
