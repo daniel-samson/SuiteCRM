@@ -60,16 +60,17 @@ install:
   # Additional PHP config
   - phpenv config-add travis.php.ini
 
-before_script: phpenv config-rm xdebug.ini
-script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/codecept run unit --steps
+before_script:
+   - phpenv config-rm xdebug.ini
+script:
+  - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
+  - ./vendor/bin/codecept run unit --steps
 
 after_script:
   - ./build/push_output.sh
   - cat suitecrm.log
   - sudo cat /var/log/apache2/error.log
   - echo $TRAVIS_COMMIT_RANGE
-
-
 
 branches:
   only:
