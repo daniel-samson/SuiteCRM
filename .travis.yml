@@ -1,40 +1,65 @@
 language: php
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-
 matrix:
   fast_finish: true
 jobs:
   include:
+      - stage: test
+          php:
+            - 5.5
+            - 5.6
+            - 7.0
+            - 7.1
+            - 7.2
+          before_script: phpenv config-rm xdebug.ini
+          script:
+            - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
+            - ./vendor/bin/codecept run unit --steps
+      - stage: api
+          php: 7.0
+          before_script: phpenv config-rm xdebug.ini
+          script:
+            - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
+            # Install OAuth2 demo data
+            - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
+            # Install demo user data
+            - mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"
+            # set the log level to error
+            - echo "\$sugar_config['logger']['level']='error';" >> config_override.php
+            # Run API functional tests
+            - ./vendor/bin/codecept run api --steps
+      - stage: acceptance
+          php: 7.0
+          before_install:
+            # Install chrome driver#
+            - whereis google-chrome-stable
+            - wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
+            - unzip -o chromedriver_linux64.zip
+            - ./chromedriver --url-base=/wd/hub &
+          before_script: phpenv config-rm xdebug.ini
+          script:
+            - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
+            - ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
+          addons:
+            chrome: stable
       - stage: codecoverage
         php: 7.0
-        script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
+        script:
+          - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/robo -vvv code:coverage
+          - cat codeception.yml
+          - bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
 
 sudo: false
 dist: trusty
 services:
   - mysql
-addons:
-  chrome: stable
 
 env:
   - INSTANCE_URL=http://localhost/ DATABASE_DRIVER=MYSQL DATABASE_NAME=automated_tests DATABASE_HOST=localhost DATABASE_USER=automated_tests DATABASE_PASSWORD=automated_tests INSTANCE_ADMIN_USER=admin INSTANCE_ADMIN_PASSWORD=admin1
 
 before_install:
-  # Install chrome driver#
-  - whereis google-chrome-stable
-  - wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
-  - unzip -o chromedriver_linux64.zip
-  - ./chromedriver --url-base=/wd/hub &
-
-install:
   - composer self-update && composer --version
 
-before_script:
+install:
   # Set up MySQL
   - mysql -e "CREATE DATABASE automated_tests;"
   - mysql -u root -e "CREATE USER 'automated_tests'@'localhost' IDENTIFIED BY 'automated_tests';"
@@ -59,26 +84,6 @@ before_script:
   - ./vendor/bin/codecept build
   # Additional PHP config
   - phpenv config-add travis.php.ini
-
-script:
-  # Run the silent installer or the wizard installer ?
-  - echo "using install wizard"
-  - ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d
-  - ./build/push_output.sh
-
-  # Run the unit tests
-  - ./vendor/bin/codecept run unit --steps
-  # Install OAuth2 demo data
-  - mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"
-  # Install demo user data
-  - mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"
-  # set the log level to error
-  - echo "\$sugar_config['logger']['level']='error';" >> config_override.php
-  # Run API functional tests
-  - ./vendor/bin/codecept run api --steps
-  # RUN Basic Acceptance test
-  - sudo chmod -R 777 .
-  - ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d;
 
 after_script:
   - ./build/push_output.sh
