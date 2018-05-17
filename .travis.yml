@@ -4,12 +4,7 @@ matrix:
 jobs:
   include:
       - stage: test
-          php:
-            - 5.5
-            - 5.6
-            - 7.0
-            - 7.1
-            - 7.2
+          php: [5.5, 5.6, 7.0, 7.1, 7.2]
           before_script: phpenv config-rm xdebug.ini
           script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/codecept run unit --steps
       - stage: api
@@ -25,7 +20,6 @@ jobs:
       - stage: codecoverage
         php: 7.0
         script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/robo -vvv code:coverage; cat codeception.yml; bash <(curl -s https://codecov.io/bash) -f tests/_output/coverage.xml
-
 sudo: false
 dist: trusty
 services:
