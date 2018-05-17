@@ -15,7 +15,6 @@ jobs:
           script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d ; mysql -u root -D automated_tests -v -e "source tests/_data/api_data.sql"; mysql -u root -D automated_tests -v -e "source tests/_data/demo_users.sql"; echo "\$sugar_config['logger']['level']='error';" >> config_override.php; ./vendor/bin/codecept run api --steps
       - stage: acceptance
           php: 7.0
-          before_install: whereis google-chrome-stable; wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip; unzip -o chromedriver_linux64.zip; ./chromedriver --url-base=/wd/hub &
           before_script: phpenv config-rm xdebug.ini
           script: ./vendor/bin/codecept run install --env travis-ci-hub -f -vvv -d; ./vendor/bin/codecept run acceptance --env travis-ci-hub -f -vvv -d
       - stage: codecoverage
@@ -33,6 +32,10 @@ env:
 
 before_install:
   - composer self-update && composer --version
+  - whereis google-chrome-stable;
+  - wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip;
+  - unzip -o chromedriver_linux64.zip;
+  - ./chromedriver --url-base=/wd/hub &
 
 install:
   # Set up MySQL
