@@ -39,6 +39,7 @@
  */
 namespace SuiteCRM\Robo\Plugin\Commands;
 
+use SuiteCRM\Robo\Traits\RoboTrait;
 use SuiteCRM\Utility\OperatingSystem;
 use SuiteCRM\Utility\Paths;
 
@@ -427,5 +428,23 @@ class TestEnvironmentCommands extends \Robo\Tasks
             . ' --url-base='
             . $urlBase
         );
+    }
+
+    private function chooseEnvironmentVariable() {
+
+    }
+
+    private function isDockerContainer() {
+        return file_exists('/.dockerenv');
+    }
+
+    private function dockerContainerName() {
+        return '';
+    }
+
+    public function getDefaultGatewayLinux() {
+        $route = $this->_exec('ip -4 route list 0/0');
+        preg_match('(\d{1,3}\.\d{1,3}.\d{1,3}.\d{1,3})', $route,$matches);
+        return $matches;
     }
 }
